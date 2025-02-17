@@ -1,93 +1,98 @@
 import { Schema } from 'mongoose';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../libs/enums/property.enum';
+import {
+	JobLocation,
+	JobStatus,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+	JobSorts,
+	JobTags,
+} from '../libs/enums/property.enum';
 
-const PropertySchema = new Schema(
+const JobSchema = new Schema(
 	{
-		propertyType: {
+		jobType: {
 			type: String,
-			enum: PropertyType,
+			enum: JobType,
 			required: true,
 		},
 
-		propertyStatus: {
+		jobStatus: {
 			type: String,
-			enum: PropertyStatus,
-			default: PropertyStatus.ACTIVE,
+			enum: JobStatus,
+			default: JobStatus.HIRING,
 		},
 
-		propertyLocation: {
+		jobLocation: {
 			type: String,
-			enum: PropertyLocation,
+			enum: JobLocation,
 			required: true,
 		},
 
-		propertyAddress: {
-			type: String,
-			required: true,
-		},
-
-		propertyTitle: {
+		jobAddress: {
 			type: String,
 			required: true,
 		},
 
-		propertyPrice: {
-			type: Number,
+		jobTitle: {
+			type: String,
 			required: true,
 		},
 
-		propertySquare: {
-			type: Number,
+		jobSalary: {
+			type: String,
+		},
+
+		koreanLevel: {
+			type: String,
+			enum: KoreanLevel,
 			required: true,
 		},
 
-		propertyBeds: {
-			type: Number,
+		workplaceType: {
+			type: String,
+			enum: WorkplaceTypes,
 			required: true,
 		},
 
-		propertyRooms: {
-			type: Number,
+		jobCategory: {
+			type: String,
+			enum: JobSorts,
 			required: true,
 		},
 
-		propertyViews: {
+		jobViews: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyLikes: {
+		jobMarks: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyComments: {
+		jobComments: {
 			type: Number,
 			default: 0,
 		},
 
-		propertyRank: {
-			type: Number,
-			default: 0,
-		},
-
-		propertyImages: {
+		jobImages: {
 			type: [String],
 			required: true,
 		},
 
-		propertyDesc: {
+		jobDesc: {
 			type: String,
 		},
 
-		propertyBarter: {
+		jobVisa: {
 			type: Boolean,
 			default: false,
 		},
 
-		propertyRent: {
-			type: Boolean,
-			default: false,
+		jobTags: {
+			type: [String],
+			enum: JobTags,
 		},
 
 		memberId: {
@@ -96,7 +101,7 @@ const PropertySchema = new Schema(
 			ref: 'Member',
 		},
 
-		soldAt: {
+		closedAt: {
 			type: Date,
 		},
 
@@ -104,13 +109,13 @@ const PropertySchema = new Schema(
 			type: Date,
 		},
 
-		constructedAt: {
+		postedAt: {
 			type: Date,
 		},
 	},
-	{ timestamps: true, collection: 'properties' },
+	{ timestamps: true, collection: 'jobs' },
 );
 
-PropertySchema.index({ propertyType: 1, propertyLocation: 1, propertyTitle: 1, propertyPrice: 1 }, { unique: true });
+JobSchema.index({ jobType: 1, jobLocation: 1, jobTitle: 1, jobSalary: 1 }, { unique: true });
 
-export default PropertySchema;
+export default JobSchema;

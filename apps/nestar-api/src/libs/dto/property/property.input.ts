@@ -1,6 +1,14 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { isIn, IsIn, IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import { IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
+import {
+	JobLocation,
+	JobSorts,
+	JobStatus,
+	JobTags,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+} from '../../enums/property.enum';
 import { ObjectId } from 'mongoose';
 import { availableOptions, availablePropertySorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
@@ -8,68 +16,64 @@ import { Direction } from '../../enums/common.enum';
 @InputType()
 export class PropertyInput {
 	@IsNotEmpty()
-	@Field(() => PropertyType)
-	propertyType: PropertyType;
+	@Field(() => JobType)
+	jobType: JobType;
 
 	@IsNotEmpty()
-	@Field(() => PropertyLocation)
-	propertyLocation: PropertyLocation;
-
-	@IsNotEmpty()
-	@Length(3, 100)
-	@Field(() => String)
-	propertyAddress: string;
+	@Field(() => JobLocation)
+	jobLocation: JobLocation;
 
 	@IsNotEmpty()
 	@Length(3, 100)
 	@Field(() => String)
-	propertyTitle: string;
+	jobAddress: string;
+
+	@IsNotEmpty()
+	@Length(3, 100)
+	@Field(() => String)
+	jobTitle: string;
 
 	@IsNotEmpty()
 	@Field(() => Number)
-	propertyPrice: number;
+	jobSalary: number;
 
 	@IsNotEmpty()
-	@Field(() => Number)
-	propertySquare: number;
+	@Field(() => KoreanLevel)
+	koreanLevel: KoreanLevel;
 
 	@IsNotEmpty()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int)
-	propertyBeds: number;
+	@Field(() => WorkplaceTypes)
+	workplaceTypes: WorkplaceTypes;
 
 	@IsNotEmpty()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int)
-	propertyRooms: number;
+	@Field(() => JobSorts)
+	jobCategory: JobSorts;
 
 	@IsNotEmpty()
 	@Field(() => [String])
-	propertyImages: string[];
+	jobImages: string[];
 
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
-	propertyDesc?: string;
+	jobDesc?: string;
 
 	@IsOptional()
 	@Field(() => Boolean, { nullable: true })
-	propertyBarter?: boolean;
+	jobVisa?: boolean;
 
 	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	propertyRent?: boolean;
+	@Field(() => [JobTags], { nullable: true })
+	jobTags?: JobTags[];
 	memberId?: ObjectId;
 
 	@IsOptional()
 	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
+	postedAt?: Date;
 }
 
 @InputType()
-export class PriceRange {
+export class SalaryRange {
 	@Field(() => Int)
 	start: number;
 
@@ -77,23 +81,23 @@ export class PriceRange {
 	end: number;
 }
 
-@InputType()
-export class SquareRange {
-	@Field(() => Int)
-	start: number;
+// @InputType()
+// export class SquareRange {
+// 	@Field(() => Int)
+// 	start: number;
 
-	@Field(() => Int)
-	end: number;
-}
+// 	@Field(() => Int)
+// 	end: number;
+// }
 
-@InputType()
-export class PeriodsRange {
-	@Field(() => Date)
-	start: Date;
+// @InputType()
+// export class PeriodsRange {
+// 	@Field(() => Date)
+// 	start: Date;
 
-	@Field(() => Date)
-	end: Date;
-}
+// 	@Field(() => Date)
+// 	end: Date;
+// }
 
 @InputType()
 export class PISearch {
@@ -102,20 +106,20 @@ export class PISearch {
 	memberId?: ObjectId;
 
 	@IsOptional()
-	@Field(() => [PropertyLocation], { nullable: true })
-	locationList?: PropertyLocation[];
+	@Field(() => [JobLocation], { nullable: true })
+	locationList?: JobLocation[];
 
 	@IsOptional()
-	@Field(() => [PropertyType], { nullable: true })
-	typeList?: PropertyType[];
+	@Field(() => [JobType], { nullable: true })
+	typeList?: JobType[];
 
 	@IsOptional()
-	@Field(() => [Int], { nullable: true })
-	roomsList?: Number[];
+	@Field(() => JobSorts, { nullable: true })
+	jobCategory?: JobSorts;
 
 	@IsOptional()
-	@Field(() => [Int], { nullable: true })
-	bedsList?: Number[];
+	@Field(() => WorkplaceTypes, { nullable: true })
+	workplaceTypes?: WorkplaceTypes;
 
 	@IsOptional()
 	@IsIn(availableOptions, { each: true })
@@ -123,16 +127,16 @@ export class PISearch {
 	options?: string[];
 
 	@IsOptional()
-	@Field(() => PriceRange, { nullable: true })
-	pricesRange?: PriceRange;
+	@Field(() => SalaryRange, { nullable: true })
+	pricesRange?: SalaryRange;
 
-	@IsOptional()
-	@Field(() => PeriodsRange, { nullable: true })
-	periodsRange?: PeriodsRange;
+	// @IsOptional()
+	// @Field(() => PeriodsRange, { nullable: true })
+	// periodsRange?: PeriodsRange;
 
-	@IsOptional()
-	@Field(() => SquareRange, { nullable: true })
-	squaresRange?: SquareRange;
+	// @IsOptional()
+	// @Field(() => SquareRange, { nullable: true })
+	// squaresRange?: SquareRange;
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
@@ -168,8 +172,8 @@ export class PropertiesInquiry {
 @InputType()
 export class APISearch {
 	@IsOptional()
-	@Field(() => PropertyStatus, { nullable: true })
-	propertyStatus?: PropertyStatus;
+	@Field(() => JobStatus, { nullable: true })
+	jobStatus?: JobStatus;
 }
 
 @InputType()
@@ -201,12 +205,12 @@ export class AgentPropertiesInquiry {
 @InputType()
 export class ALPISearch {
 	@IsOptional()
-	@Field(() => PropertyStatus, { nullable: true })
-	propertyStatus?: PropertyStatus;
+	@Field(() => JobStatus, { nullable: true })
+	jobStatus?: JobStatus;
 
 	@IsOptional()
-	@Field(() => [PropertyLocation], { nullable: true })
-	propertyLocationList?: PropertyLocation;
+	@Field(() => [JobLocation], { nullable: true })
+	jobLocationList?: JobLocation;
 }
 
 @InputType()

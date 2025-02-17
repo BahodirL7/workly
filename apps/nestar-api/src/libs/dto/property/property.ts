@@ -1,6 +1,14 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import {
+	JobLocation,
+	JobSorts,
+	JobStatus,
+	JobTags,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+} from '../../enums/property.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
 
@@ -9,62 +17,59 @@ export class Property {
 	@Field(() => String)
 	_id: ObjectId;
 
-	@Field(() => PropertyType)
-	propertyType: PropertyType;
+	@Field(() => JobType)
+	jobType: JobType;
 
-	@Field(() => PropertyStatus)
-	propertyStatus: PropertyStatus;
+	@Field(() => JobStatus)
+	jobStatus: JobStatus;
 
-	@Field(() => PropertyLocation)
-	propertyLocation: PropertyLocation;
-
-	@Field(() => String)
-	propertyAddress: string;
+	@Field(() => JobLocation)
+	jobLocation: JobLocation;
 
 	@Field(() => String)
-	propertyTitle: string;
+	jobAddress: string;
+
+	@Field(() => String)
+	jobTitle: string;
 
 	@Field(() => Number)
-	propertyPrice: number;
+	jobSalary: number;
 
-	@Field(() => Number)
-	propertySquare: number;
+	@Field(() => KoreanLevel)
+	koreanLevel: KoreanLevel;
 
-	@Field(() => Int)
-	propertyBeds: number;
+	@Field(() => WorkplaceTypes)
+	workplaceTypes: WorkplaceTypes;
 
-	@Field(() => Int)
-	propertyRooms: number;
-
-	@Field(() => Int)
-	propertyViews: number;
+	@Field(() => JobSorts)
+	jobCategory: JobSorts;
 
 	@Field(() => Int)
-	propertyLikes: number;
+	jobViews: number;
 
 	@Field(() => Int)
-	propertyComments: number;
+	jobMarks: number;
 
 	@Field(() => Int)
-	propertyRank: number;
+	jobComments: number;
 
 	@Field(() => [String])
-	propertyImages: string[];
+	jobImages: string[];
 
 	@Field(() => String, { nullable: true })
-	propertyDesc?: string[];
+	jobDesc?: string[];
 
 	@Field(() => Boolean)
-	propertyBarter: boolean;
+	jobVisa: boolean;
 
-	@Field(() => Boolean)
-	propertyRent: boolean;
+	@Field(() => [JobTags])
+	jobTags: JobTags[];
 
 	@Field(() => String)
 	memberId: ObjectId;
 
 	@Field(() => Date, { nullable: true })
-	soldAt?: Date;
+	closedAt?: Date;
 
 	@Field(() => Date)
 	createdAt: Date;
@@ -73,7 +78,7 @@ export class Property {
 	deletedAt?: Date;
 
 	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
+	postedAt?: Date;
 
 	@Field(() => Date)
 	updatedAt: Date;

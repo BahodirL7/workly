@@ -1,6 +1,14 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../enums/property.enum';
+import {
+	JobLocation,
+	JobSorts,
+	JobStatus,
+	JobTags,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+} from '../../enums/property.enum';
 import { IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
 
 @InputType()
@@ -10,69 +18,65 @@ export class PropertyUpdate {
 	_id: ObjectId;
 
 	@IsOptional()
-	@Field(() => PropertyType, { nullable: true })
-	propertyType?: PropertyType;
+	@Field(() => JobType, { nullable: true })
+	jobType?: JobType;
 
 	@IsOptional()
-	@Field(() => PropertyStatus, { nullable: true })
-	propertyStatus?: PropertyStatus;
+	@Field(() => JobStatus, { nullable: true })
+	jobStatus?: JobStatus;
 
 	@IsOptional()
-	@Field(() => PropertyLocation, { nullable: true })
-	propertyLocation?: PropertyLocation;
-
-	@IsOptional()
-	@Length(3, 100)
-	@Field(() => String, { nullable: true })
-	propertyAddress?: string;
+	@Field(() => JobLocation, { nullable: true })
+	jobLocation?: JobLocation;
 
 	@IsOptional()
 	@Length(3, 100)
 	@Field(() => String, { nullable: true })
-	propertyTitle?: string;
+	jobAddress?: string;
+
+	@IsOptional()
+	@Length(3, 100)
+	@Field(() => String, { nullable: true })
+	jobTitle?: string;
 
 	@IsOptional()
 	@Field(() => Number, { nullable: true })
-	propertyPrice?: number;
+	jobSalary?: number;
 
 	@IsOptional()
-	@Field(() => Number, { nullable: true })
-	propertySquare?: number;
+	@Field(() => KoreanLevel, { nullable: true })
+	koreanLevel?: KoreanLevel;
 
 	@IsOptional()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int, { nullable: true })
-	propertyBeds?: number;
+	@Field(() => WorkplaceTypes, { nullable: true })
+	workplaceTypes?: WorkplaceTypes;
 
 	@IsOptional()
-	@IsInt()
-	@Min(1)
-	@Field(() => Int, { nullable: true })
-	propertyRooms?: number;
+	@Field(() => JobSorts, { nullable: true })
+	jobCategory?: JobSorts;
 
 	@IsOptional()
 	@Field(() => [String], { nullable: true })
-	propertyImages?: string[];
+	jobImages?: string[];
 
 	@IsOptional()
 	@Length(5, 500)
 	@Field(() => String, { nullable: true })
-	propertyDesc?: string[];
+	jobDesc?: string[];
 
 	@IsOptional()
 	@Field(() => Boolean, { nullable: true })
-	propertyBarter?: boolean;
+	jobVisa?: boolean;
 
 	@IsOptional()
-	@Field(() => Boolean, { nullable: true })
-	propertyRent?: boolean;
+	@Field(() => [JobTags], { nullable: true })
+	jobTags?: JobTags[];
 
-	soldAt?: Date;
+	closedAt?: Date;
 
 	deletedAt?: Date;
 
 	@IsOptional()
 	@Field(() => Date, { nullable: true })
-	constructedAt?: Date;
+	postedAt?: Date;
 }
