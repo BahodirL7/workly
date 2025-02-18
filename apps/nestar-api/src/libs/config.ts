@@ -1,11 +1,11 @@
 import { ObjectId } from 'bson';
 
-export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
-export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberLikes', 'memberViews'];
+export const availableAgentSorts = ['createdAt', 'updatedAt', 'memberMarks', 'memberViews'];
+export const availableMemberSorts = ['createdAt', 'updatedAt', 'memberMarks', 'memberViews'];
 export const availableOptions = ['jobVisa', 'jobTags'];
-export const availablePropertySorts = ['createdAt', 'updatedAt', 'jobLikes', 'jobViews', 'jobSalary'];
+export const availablePropertySorts = ['createdAt', 'updatedAt', 'jobMarks', 'jobViews', 'jobSalary'];
 
-export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
+export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleMarks', 'articleViews'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
 
 /** IMAGE CONFIGURATION **/
@@ -22,7 +22,7 @@ export const getSerialForImage = (filename: string) => {
 export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id') => {
 	return {
 		$lookup: {
-			from: 'likes',
+			from: 'marks',
 			let: {
 				localLikeRefId: targetRefId,
 				localMemberId: memberId,

@@ -15,8 +15,8 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { LikeInput } from '../../libs/dto/like/like.input';
-import { LikeGroup } from '../../libs/enums/like.enum';
+import { MarkInput } from '../../libs/dto/like/like.input';
+import { MarkGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
 
 @Injectable()
@@ -59,8 +59,8 @@ export class BoardArticleService {
 			}
 
 			//meLiked
-			const likeInput = { memberId: memberId, likeRefId: articleId, likeGroup: LikeGroup.ARTICLE };
-			targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput);
+			const markInput = { memberId: memberId, markRefId: articleId, markGroup: MarkGroup.ARTICLE };
+			targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(markInput);
 		}
 
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
@@ -131,18 +131,18 @@ export class BoardArticleService {
 		return result[0];
 	}
 
-	public async likeTargetBoardArticle(memberId: ObjectId, likeRefId: ObjectId): Promise<BoardArticle> {
+	public async likeTargetBoardArticle(memberId: ObjectId, markRefId: ObjectId): Promise<BoardArticle> {
 		const target: BoardArticle = await this.boardArticleModel
-			.findOne({ _id: likeRefId, articleStatus: BoardArticleStatus.ACTIVE })
+			.findOne({ _id: markRefId, articleStatus: BoardArticleStatus.ACTIVE })
 			.exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		const input: LikeInput = { memberId: memberId, likeRefId: likeRefId, likeGroup: LikeGroup.ARTICLE };
+		const input: MarkInput = { memberId: memberId, markRefId: markRefId, markGroup: MarkGroup.ARTICLE };
 
 		// LIKE TOGGLE via Like modules
 		const modifier: number = await this.likeService.toggleLike(input);
 		const result = await this.boardArticleStatsEditor({
-			_id: likeRefId,
-			targetKey: 'articleLikes',
+			_id: markRefId,
+			targetKey: 'articleMarks',
 			modifier: modifier,
 		});
 

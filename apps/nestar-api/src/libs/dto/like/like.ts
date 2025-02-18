@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { LikeGroup } from '../../enums/like.enum';
+import { MarkGroup } from '../../enums/like.enum';
 import { ObjectId } from 'mongoose';
 
 @ObjectType()
-export class MeLiked {
+export class MeMarked {
 	@Field(() => String)
 	memberId: ObjectId;
 
@@ -19,11 +19,11 @@ export class Like {
 	@Field(() => String)
 	_id: ObjectId;
 
-	@Field(() => LikeGroup)
-	likeGroup: LikeGroup;
+	@Field(() => MarkGroup)
+	markGroup: MarkGroup;
 
 	@Field(() => String)
-	likeRefId: ObjectId;
+	markRefId: ObjectId;
 
 	@Field(() => String)
 	memberId: ObjectId;

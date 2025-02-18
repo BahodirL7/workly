@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
-import { MeLiked } from '../like/like';
+import { MeMarked } from '../like/like';
 import { MeFollowed } from '../follow/follow';
+import { JobStatus } from '../../enums/property.enum';
 
 @ObjectType()
 export class Member {
@@ -15,11 +16,20 @@ export class Member {
 	@Field(() => MemberStatus)
 	memberStatus: MemberStatus;
 
+	@Field(() => JobStatus)
+	memberJobStatus: JobStatus;
+
 	@Field(() => MemberAuthType)
 	memberAuthType: MemberAuthType;
 
 	@Field(() => String)
+	memberLink: string;
+
+	@Field(() => String)
 	memberPhone: string;
+
+	@Field(() => String)
+	employeeCapacity: string;
 
 	@Field(() => String)
 	memberNick: string;
@@ -39,7 +49,7 @@ export class Member {
 	memberDesc?: string;
 
 	@Field(() => Int)
-	memberProperties: number;
+	memberJobs: number;
 
 	@Field(() => Int)
 	memberArticles: number;
@@ -54,7 +64,7 @@ export class Member {
 	memberPoints: number;
 
 	@Field(() => Int)
-	memberLikes: number;
+	memberMarks: number;
 
 	@Field(() => Int)
 	memberViews: number;
@@ -85,8 +95,8 @@ export class Member {
 
 	/** from aggregation **/
 
-	@Field(() => [MeLiked], { nullable: true })
-	meLiked?: MeLiked[];
+	@Field(() => [MeMarked], { nullable: true })
+	meMarked?: MeMarked[];
 
 	@Field(() => [MeFollowed], { nullable: true })
 	meFollowed?: MeFollowed[];

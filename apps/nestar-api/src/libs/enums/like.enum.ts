@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum LikeGroup {
+export enum MarkGroup {
 	MEMBER = 'MEMBER',
-	PROPERTY = 'PROPERTY',
+	JOB = 'JOB',
 	ARTICLE = 'ARTICLE',
 }
-registerEnumType(LikeGroup, {
-	name: 'LikeGroup',
+registerEnumType(MarkGroup, {
+	name: 'MarkGroup',
 });

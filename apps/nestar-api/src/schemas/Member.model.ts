@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { MemberAuthType, MemberStatus, MemberType } from '../libs/enums/member.enum';
+import { EmployeeCapacity, MemberAuthType, MemberStatus, MemberType } from '../libs/enums/member.enum';
+import { JobStatus } from '../libs/enums/property.enum';
 
 const MemberSchema = new Schema(
 	{
@@ -15,10 +16,28 @@ const MemberSchema = new Schema(
 			default: MemberStatus.ACTIVE,
 		},
 
+		memberJobStatus: {
+			type: String,
+			enum: JobStatus,
+			default: JobStatus.HIRING,
+		},
+
 		memberAuthType: {
 			type: String,
 			enum: MemberAuthType,
 			default: MemberAuthType.PHONE,
+		},
+
+		memberLink: {
+			type: String,
+			index: { unique: true, sparse: true },
+			required: true,
+		},
+
+		employeeCapacity: {
+			type: String,
+			enum: EmployeeCapacity,
+			required: true,
 		},
 
 		memberPhone: {
@@ -56,7 +75,7 @@ const MemberSchema = new Schema(
 			type: String,
 		},
 
-		memberProperties: {
+		memberJobs: {
 			type: Number,
 			default: 0,
 		},
@@ -81,7 +100,7 @@ const MemberSchema = new Schema(
 			default: 0,
 		},
 
-		memberLikes: {
+		memberMarks: {
 			type: Number,
 			default: 0,
 		},

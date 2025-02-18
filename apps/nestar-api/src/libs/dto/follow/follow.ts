@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { Member, TotalCounter } from '../member/member';
-import { MeLiked } from '../like/like';
+import { MeMarked } from '../like/like';
 
 @ObjectType()
 export class MeFollowed {
@@ -34,8 +34,8 @@ export class Follower {
 
 	/** from aggregation **/
 
-	@Field(() => [MeLiked], { nullable: true })
-	meLiked?: MeLiked[];
+	@Field(() => [MeMarked], { nullable: true })
+	meLiked?: MeMarked[];
 
 	@Field(() => [MeFollowed], { nullable: true })
 	meFollowed?: MeFollowed[];
@@ -63,8 +63,8 @@ export class Following {
 
 	/** from aggregation **/
 
-	@Field(() => [MeLiked], { nullable: true })
-	meLiked?: MeLiked[];
+	@Field(() => [MeMarked], { nullable: true })
+	meLiked?: MeMarked[];
 
 	@Field(() => [MeFollowed], { nullable: true })
 	meFollowed?: MeFollowed[];

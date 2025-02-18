@@ -11,8 +11,8 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { ViewService } from '../view/view.service';
 import { ViewInput } from '../../libs/dto/view/view.input';
 import { ViewGroup } from '../../libs/enums/view.enum';
-import { LikeInput } from '../../libs/dto/like/like.input';
-import { LikeGroup } from '../../libs/enums/like.enum';
+import { MarkInput } from '../../libs/dto/like/like.input';
+import { MarkGroup } from '../../libs/enums/like.enum';
 import { LikeService } from '../like/like.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
 import { lookupAuthMemberLiked } from '../../libs/config';
@@ -99,8 +99,8 @@ export class MemberService {
 			}
 
 			// meLiked
-			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
-			targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+			const markInput = { memberId: memberId, markRefId: targetId, markGroup: MarkGroup.MEMBER };
+			targetMember.meMarked = await this.likeService.checkLikeExistence(markInput);
 
 			// meFollowed
 			targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
@@ -111,7 +111,7 @@ export class MemberService {
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
 		const { text } = input.search;
-		const match: T = { memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE };
+		const match: T = { memberType: MemberType.COMPANY, memberStatus: MemberStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
 		if (text) match.memberNick = { $regex: new RegExp(text, 'i') };
@@ -143,7 +143,7 @@ export class MemberService {
 	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
 		const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		const input: LikeInput = { memberId: memberId, likeRefId: likeRefId, likeGroup: LikeGroup.MEMBER };
+		const input: MarkInput = { memberId: memberId, markRefId: likeRefId, markGroup: MarkGroup.MEMBER };
 
 		// LIKE TOGGLE via Like modules
 		const modifier: number = await this.likeService.toggleLike(input);
