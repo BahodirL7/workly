@@ -1,20 +1,12 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import {
-	JobLocation,
-	JobSorts,
-	JobStatus,
-	JobTags,
-	JobType,
-	KoreanLevel,
-	WorkplaceTypes,
-} from '../../enums/property.enum';
+import { JobLocation, JobSorts, JobStatus, JobTags, JobType, KoreanLevel, WorkplaceTypes } from '../../enums/job.enum';
 import { ObjectId } from 'mongoose';
-import { availableOptions, availablePropertySorts } from '../../config';
+import { availableOptions, availableJobSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
 @InputType()
-export class PropertyInput {
+export class JobInput {
 	@IsNotEmpty()
 	@Field(() => JobType)
 	jobType: JobType;
@@ -81,26 +73,8 @@ export class SalaryRange {
 	end: number;
 }
 
-// @InputType()
-// export class SquareRange {
-// 	@Field(() => Int)
-// 	start: number;
-
-// 	@Field(() => Int)
-// 	end: number;
-// }
-
-// @InputType()
-// export class PeriodsRange {
-// 	@Field(() => Date)
-// 	start: Date;
-
-// 	@Field(() => Date)
-// 	end: Date;
-// }
-
 @InputType()
-export class PISearch {
+export class JISearch {
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	memberId?: ObjectId;
@@ -130,21 +104,13 @@ export class PISearch {
 	@Field(() => SalaryRange, { nullable: true })
 	pricesRange?: SalaryRange;
 
-	// @IsOptional()
-	// @Field(() => PeriodsRange, { nullable: true })
-	// periodsRange?: PeriodsRange;
-
-	// @IsOptional()
-	// @Field(() => SquareRange, { nullable: true })
-	// squaresRange?: SquareRange;
-
 	@IsOptional()
 	@Field(() => String, { nullable: true })
 	text?: string;
 }
 
 @InputType()
-export class PropertiesInquiry {
+export class JobsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
@@ -156,7 +122,7 @@ export class PropertiesInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn(availablePropertySorts)
+	@IsIn(availableJobSorts)
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -165,8 +131,8 @@ export class PropertiesInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => PISearch)
-	search: PISearch;
+	@Field(() => JISearch)
+	search: JISearch;
 }
 
 @InputType()
@@ -177,7 +143,7 @@ export class APISearch {
 }
 
 @InputType()
-export class AgentPropertiesInquiry {
+export class AgentJobsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
@@ -189,7 +155,7 @@ export class AgentPropertiesInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn(availablePropertySorts)
+	@IsIn(availableJobSorts)
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -203,7 +169,7 @@ export class AgentPropertiesInquiry {
 }
 
 @InputType()
-export class ALPISearch {
+export class ALJISearch {
 	@IsOptional()
 	@Field(() => JobStatus, { nullable: true })
 	jobStatus?: JobStatus;
@@ -214,7 +180,7 @@ export class ALPISearch {
 }
 
 @InputType()
-export class AllPropertiesInquiry {
+export class AllJobsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
@@ -226,7 +192,7 @@ export class AllPropertiesInquiry {
 	limit: number;
 
 	@IsOptional()
-	@IsIn(availablePropertySorts)
+	@IsIn(availableJobSorts)
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -235,8 +201,8 @@ export class AllPropertiesInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => ALPISearch)
-	search: ALPISearch;
+	@Field(() => ALJISearch)
+	search: ALJISearch;
 }
 
 @InputType()

@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 import { ViewGroup } from '../libs/enums/view.enum';
 
-const LikeSchema = new Schema(
+const MarkSchema = new Schema(
 	{
 		likeGroup: {
 			type: String,
@@ -13,7 +13,7 @@ const LikeSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
-		
+
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,
@@ -23,6 +23,6 @@ const LikeSchema = new Schema(
 	{ timestamps: true, collection: 'likes' },
 );
 
-LikeSchema.index({ memberId: 1, likeRefId: 1 }, { unique: true });
+MarkSchema.index({ memberId: 1, likeRefId: 1 }, { unique: true });
 
-export default LikeSchema;
+export default MarkSchema;

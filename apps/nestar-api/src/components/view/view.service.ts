@@ -4,9 +4,9 @@ import { Model, ObjectId } from 'mongoose';
 import { View } from '../../libs/dto/view/view';
 import { ViewInput } from '../../libs/dto/view/view.input';
 import { T } from '../../libs/types/common';
-import { Properties } from '../../libs/dto/property/property';
+import { Jobs } from '../../libs/dto/job/job';
 import { lookupVisit } from '../../libs/config';
-import { OrdinaryInquiry } from '../../libs/dto/property/property.input';
+import { OrdinaryInquiry } from '../../libs/dto/job/job.input';
 import { ViewGroup } from '../../libs/enums/view.enum';
 
 @Injectable()
@@ -29,9 +29,9 @@ export class ViewService {
 		return await this.viewModel.findOne(search).exec();
 	}
 
-	public async getVisitedProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+	public async getVisitedProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		const { page, limit } = input;
-		const match: T = { viewGroup: ViewGroup.PROPERTY, memberId: memberId };
+		const match: T = { viewGroup: ViewGroup.JOB, memberId: memberId };
 		const data: T = await this.viewModel
 			.aggregate([
 				{ $match: match },
@@ -59,7 +59,7 @@ export class ViewService {
 			])
 			.exec();
 		console.log('data:', data);
-		const result: Properties = { list: [], metaCounter: data[0].metaCounter };
+		const result: Jobs = { list: [], metaCounter: data[0].metaCounter };
 		result.list = data[0].list.map((ele) => ele.visitedProperty);
 		console.log('result:', result);
 		return result;

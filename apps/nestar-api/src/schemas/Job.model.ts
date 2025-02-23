@@ -7,7 +7,8 @@ import {
 	WorkplaceTypes,
 	JobSorts,
 	JobTags,
-} from '../libs/enums/property.enum';
+	JobExperience,
+} from '../libs/enums/job.enum';
 
 const JobSchema = new Schema(
 	{
@@ -95,6 +96,12 @@ const JobSchema = new Schema(
 			enum: JobTags,
 		},
 
+		jobExperience: {
+			type: String,
+			enum: JobExperience,
+			required: true,
+		},
+
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,
@@ -116,6 +123,6 @@ const JobSchema = new Schema(
 	{ timestamps: true, collection: 'jobs' },
 );
 
-JobSchema.index({ jobType: 1, jobLocation: 1, jobTitle: 1, jobSalary: 1 }, { unique: true });
+JobSchema.index({ jobType: 1, jobLocation: 1, jobTitle: 1 }, { unique: true });
 
 export default JobSchema;

@@ -1,13 +1,13 @@
 import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { Like, MeMarked } from '../../libs/dto/like/like';
-import { MarkInput } from '../../libs/dto/like/like.input';
+import { Like, MeMarked } from '../../libs/dto/mark/job';
+import { MarkInput } from '../../libs/dto/mark/job.input';
 import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
-import { OrdinaryInquiry } from '../../libs/dto/property/property.input';
-import { Properties } from '../../libs/dto/property/property';
-import { MarkGroup } from '../../libs/enums/like.enum';
+import { OrdinaryInquiry } from '../../libs/dto/job/job.input';
+import { Jobs } from '../../libs/dto/job/job';
+import { MarkGroup } from '../../libs/enums/mark.enum';
 import { lookupFavorite } from '../../libs/config';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class LikeService {
 
 		return result ? [{ memberId: memberId, likeRefId: markRefId, myFavorite: true }] : [];
 	}
-	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		const { page, limit } = input;
 		const match: T = { likeGroup: MarkGroup.JOB, memberId: memberId };
 		const data: T = await this.likeModel
@@ -51,8 +51,8 @@ export class LikeService {
 				{ $sort: { updatedAt: -1 } },
 				{
 					$lookup: {
-						from: 'properties',
-						localField: 'likeRefId',
+						from: 'jobs',
+						localField: 'markRefId',
 						foreignField: '_id',
 						as: 'favoriteProperty',
 					},
@@ -71,7 +71,7 @@ export class LikeService {
 				},
 			])
 			.exec();
-		const result: Properties = { list: [], metaCounter: data[0].metaCounter };
+		const result: Jobs = { list: [], metaCounter: data[0].metaCounter };
 		result.list = data[0].list.map((ele) => ele.favoriteProperty);
 		console.log('result:', result);
 		return result;

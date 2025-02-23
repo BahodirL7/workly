@@ -1,37 +1,31 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { Properties, Property } from '../../libs/dto/property/property';
-import {
-	AgentPropertiesInquiry,
-	AllPropertiesInquiry,
-	OrdinaryInquiry,
-	PropertiesInquiry,
-	PropertyInput,
-} from '../../libs/dto/property/property.input';
+import { Jobs, Job } from '../../libs/dto/job/job';
+import { AgentJobsInquiry, AllJobsInquiry, OrdinaryInquiry, JobsInquiry, JobInput } from '../../libs/dto/job/job.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { MemberService } from '../member/member.service';
 import { StatisticModifier, T } from '../../libs/types/common';
-import { JobStatus } from '../../libs/enums/property.enum';
+import { JobStatus } from '../../libs/enums/job.enum';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { ViewService } from '../view/view.service';
-import { PropertyUpdate } from '../../libs/dto/property/property.update';
+import { JobUpdate } from '../../libs/dto/job/job.update';
 import * as moment from 'moment';
 import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MarkInput } from '../../libs/dto/like/like.input';
-import { MarkGroup } from '../../libs/enums/like.enum';
+import { MarkInput } from '../../libs/dto/mark/job.input';
+import { MarkGroup } from '../../libs/enums/mark.enum';
 import { LikeService } from '../like/like.service';
 
 @Injectable()
 export class PropertyService {
 	constructor(
-		@InjectModel('Property') private readonly propertyModel: Model<Property>,
+		@InjectModel('Property') private readonly propertyModel: Model<Job>,
 		private readonly memberService: MemberService,
 		private readonly viewService: ViewService,
 		private readonly likeService: LikeService,
 	) {}
 
-	public async createProperty(input: PropertyInput): Promise<Property> {
+	public async createProperty(input: JobInput): Promise<Job> {
 		try {
 			const result = await this.propertyModel.create(input);
 			//increase MemberProperties
@@ -44,14 +38,14 @@ export class PropertyService {
 		}
 	}
 
-	public async getProperty(memberId: ObjectId, propertyId: ObjectId): Promise<Property> {
+	public async getProperty(memberId: ObjectId, propertyId: ObjectId): Promise<Job> {
 		const search: T = { _id: propertyId, propertyStatus: JobStatus.HIRING };
 
-		const targetProperty: Property = await this.propertyModel.findOne(search).exec();
+		const targetProperty: Job = await this.propertyModel.findOne(search).exec();
 		if (!targetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
-			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.PROPERTY };
+			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.JOB };
 			const newView = await this.viewService.recordView(viewInput);
 
 			if (newView) {
@@ -68,12 +62,12 @@ export class PropertyService {
 		return targetProperty;
 	}
 
-	public async propertyStatsEditor(input: StatisticModifier): Promise<Property> {
+	public async propertyStatsEditor(input: StatisticModifier): Promise<Job> {
 		const { _id, targetKey, modifier } = input;
 		return await this.propertyModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	}
 
-	public async updateProperty(memberId: ObjectId, input: PropertyUpdate): Promise<Property> {
+	public async updateProperty(memberId: ObjectId, input: JobUpdate): Promise<Job> {
 		let { jobStatus, closedAt, deletedAt } = input;
 		const search: T = {
 			_id: input._id,
@@ -98,7 +92,7 @@ export class PropertyService {
 		return result;
 	}
 
-	public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties> {
+	public async getProperties(memberId: ObjectId, input: JobsInquiry): Promise<Jobs> {
 		const match: T = { propertyStatus: JobStatus.HIRING };
 
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
@@ -130,7 +124,7 @@ export class PropertyService {
 		return result[0];
 	}
 
-	private shapeMatchQuery(match: T, input: PropertiesInquiry): void {
+	private shapeMatchQuery(match: T, input: JobsInquiry): void {
 		const { memberId, locationList, jobCategory, workplaceTypes, typeList, pricesRange, options, text } = input.search;
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
@@ -151,7 +145,7 @@ export class PropertyService {
 		}
 	}
 
-	public async getAgentProperties(memberId: ObjectId, input: AgentPropertiesInquiry): Promise<Properties> {
+	public async getAgentProperties(memberId: ObjectId, input: AgentJobsInquiry): Promise<Jobs> {
 		const { jobStatus } = input.search;
 		if (jobStatus === JobStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 		const match: T = { memberId: memberId, jobStatus: jobStatus ?? { $ne: JobStatus.DELETE } };
@@ -180,16 +174,16 @@ export class PropertyService {
 		return result[0];
 	}
 
-	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		return await this.likeService.getFavoriteProperties(memberId, input);
 	}
 
-	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
+	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		return await this.viewService.getVisitedProperties(memberId, input);
 	}
 
-	public async likeTargetProperty(memberId: ObjectId, markRefId: ObjectId): Promise<Property> {
-		const target: Property = await this.propertyModel.findOne({ _id: markRefId, jobStatus: JobStatus.HIRING }).exec();
+	public async likeTargetProperty(memberId: ObjectId, markRefId: ObjectId): Promise<Job> {
+		const target: Job = await this.propertyModel.findOne({ _id: markRefId, jobStatus: JobStatus.HIRING }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		const input: MarkInput = { memberId: memberId, markRefId: markRefId, markGroup: MarkGroup.JOB };
 
@@ -203,7 +197,7 @@ export class PropertyService {
 
 	/** ADMIN **/
 
-	public async getAllPropertiesByAdmin(input: AllPropertiesInquiry): Promise<Properties> {
+	public async getAllPropertiesByAdmin(input: AllJobsInquiry): Promise<Jobs> {
 		const { jobStatus, jobLocationList } = input.search;
 		const match: T = {};
 		const sort: T = { [input.sort ?? 'createdAt']: input.direction ?? Direction.DESC };
@@ -233,7 +227,7 @@ export class PropertyService {
 		return result[0];
 	}
 
-	public async updatePropertyByAdmin(input: PropertyUpdate): Promise<Property> {
+	public async updatePropertyByAdmin(input: JobUpdate): Promise<Job> {
 		let { jobStatus, closedAt, deletedAt } = input;
 		const search: T = {
 			_id: input._id,
@@ -257,7 +251,7 @@ export class PropertyService {
 		return result;
 	}
 
-	public async removePropertyByAdmin(propertyId: ObjectId): Promise<Property> {
+	public async removePropertyByAdmin(propertyId: ObjectId): Promise<Job> {
 		const search: T = { _id: propertyId, propertyStatus: JobStatus.DELETE };
 		const result = await this.propertyModel.findOneAndDelete(search).exec();
 		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);

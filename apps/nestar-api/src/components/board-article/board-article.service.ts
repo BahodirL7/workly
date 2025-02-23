@@ -15,8 +15,8 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MarkInput } from '../../libs/dto/like/like.input';
-import { MarkGroup } from '../../libs/enums/like.enum';
+import { MarkInput } from '../../libs/dto/mark/job.input';
+import { MarkGroup } from '../../libs/enums/mark.enum';
 import { LikeService } from '../like/like.service';
 
 @Injectable()

@@ -1,19 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import {
-	JobLocation,
-	JobSorts,
-	JobStatus,
-	JobTags,
-	JobType,
-	KoreanLevel,
-	WorkplaceTypes,
-} from '../../enums/property.enum';
+import { JobLocation, JobSorts, JobStatus, JobTags, JobType, KoreanLevel, WorkplaceTypes } from '../../enums/job.enum';
 import { Member, TotalCounter } from '../member/member';
-import { MeMarked } from '../like/like';
+import { MeMarked } from '../mark/job';
 
 @ObjectType()
-export class Property {
+export class Job {
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -93,9 +85,9 @@ export class Property {
 }
 
 @ObjectType()
-export class Properties {
-	@Field(() => [Property])
-	list: Property[];
+export class Jobs {
+	@Field(() => [Job])
+	list: Job[];
 
 	@Field(() => [TotalCounter], { nullable: true })
 	metaCounter: TotalCounter[];

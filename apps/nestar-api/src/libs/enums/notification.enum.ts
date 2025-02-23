@@ -1,7 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum NotificationType {
-	LIKE = 'LIKE',
+	MARK = 'MARK',
 	COMMENT = 'COMMENT',
 }
 registerEnumType(NotificationType, {
@@ -19,7 +19,7 @@ registerEnumType(NotificationStatus, {
 export enum NotificationGroup {
 	MEMBER = 'MEMBER',
 	ARTICLE = 'ARTICLE',
-	PROPERTY = 'PROPERTY',
+	JOB = 'JOB',
 }
 registerEnumType(NotificationGroup, {
 	name: 'NotificationGroup',

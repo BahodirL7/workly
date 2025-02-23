@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { EmployeeCapacity, MemberAuthType, MemberStatus, MemberType } from '../libs/enums/member.enum';
-import { JobStatus } from '../libs/enums/property.enum';
+import { JobStatus } from '../libs/enums/job.enum';
 
 const MemberSchema = new Schema(
 	{

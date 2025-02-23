@@ -63,6 +63,17 @@ registerEnumType(JobSorts, {
 	name: 'JobSorts',
 });
 
+export enum JobExperience {
+	ENTRY_LEVEL = 'New Grad or above',
+	JUNIOR = 'Junior (1-2 years)',
+	MID_LEVEL = 'Mid-level (2-5 years)',
+	SENIOR = 'Senior (5+ years)',
+	EXPERT = 'Expert (10+ years)',
+}
+registerEnumType(JobExperience, {
+	name: 'JobExperience',
+});
+
 export enum JobTags {
 	ANALYTICS = 'Analytics',
 	ANDROID = 'Android',

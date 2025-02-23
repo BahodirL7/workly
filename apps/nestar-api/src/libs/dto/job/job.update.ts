@@ -1,18 +1,10 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import {
-	JobLocation,
-	JobSorts,
-	JobStatus,
-	JobTags,
-	JobType,
-	KoreanLevel,
-	WorkplaceTypes,
-} from '../../enums/property.enum';
+import { JobLocation, JobSorts, JobStatus, JobTags, JobType, KoreanLevel, WorkplaceTypes } from '../../enums/job.enum';
 import { IsInt, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
 
 @InputType()
-export class PropertyUpdate {
+export class JobUpdate {
 	@IsNotEmpty()
 	@Field(() => String)
 	_id: ObjectId;
