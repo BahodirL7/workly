@@ -22,6 +22,7 @@ export enum MemberAuthType {
 registerEnumType(MemberAuthType, { name: 'MemberAuthType' });
 
 export enum EmployeeCapacity {
+	DEFAULT = '',
 	SOLO = '1-10',
 	SMALL = '11-50',
 	MEDIUM = '51-200',

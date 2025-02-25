@@ -26,10 +26,10 @@ export class Member {
 	memberLink: string;
 
 	@Field(() => String)
-	memberPhone: string;
+	employeeCapacity: string;
 
 	@Field(() => String)
-	employeeCapacity: string;
+	memberPhone: string;
 
 	@Field(() => String)
 	memberNick: string;

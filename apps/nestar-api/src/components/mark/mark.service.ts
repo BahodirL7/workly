@@ -1,7 +1,7 @@
 import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { Like, MeMarked } from '../../libs/dto/mark/job';
+import { Mark, MeMarked } from '../../libs/dto/mark/job';
 import { MarkInput } from '../../libs/dto/mark/job.input';
 import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
@@ -11,20 +11,20 @@ import { MarkGroup } from '../../libs/enums/mark.enum';
 import { lookupFavorite } from '../../libs/config';
 
 @Injectable()
-export class LikeService {
-	constructor(@InjectModel('Like') private readonly likeModel: Model<Like>) {}
+export class MarkService {
+	constructor(@InjectModel('Mark') private readonly markModel: Model<Mark>) {}
 
-	public async toggleLike(input: MarkInput): Promise<number> {
+	public async toggleMark(input: MarkInput): Promise<number> {
 		const search: T = { memberId: input.memberId, markRefId: input.markRefId };
-		const existing = await this.likeModel.findOne(search).exec();
+		const existing = await this.markModel.findOne(search).exec();
 		let modifier: number;
 
 		if (existing) {
-			await this.likeModel.findOneAndDelete(search).exec();
+			await this.markModel.findOneAndDelete(search).exec();
 			modifier = -1; // Unlike
 		} else {
 			try {
-				await this.likeModel.findOneAndUpdate(search, input, { upsert: true, setDefaultsOnInsert: true }).exec();
+				await this.markModel.findOneAndUpdate(search, input, { upsert: true, setDefaultsOnInsert: true }).exec();
 				modifier = 1; // Like
 			} catch (err) {
 				console.error('Error, Service.model', err.message);
@@ -32,20 +32,20 @@ export class LikeService {
 			}
 		}
 
-		console.log(`- Like modifier ${modifier} -`);
+		console.log(`- Mark modifier ${modifier} -`);
 		return modifier;
 	}
 
-	public async checkLikeExistence(input: MarkInput): Promise<MeMarked[]> {
+	public async checkMarkExistence(input: MarkInput): Promise<MeMarked[]> {
 		const { memberId, markRefId } = input;
-		const result = await this.likeModel.findOne({ memberId: memberId, likeRefId: markRefId }).exec();
+		const result = await this.markModel.findOne({ memberId: memberId, likeRefId: markRefId }).exec();
 
-		return result ? [{ memberId: memberId, likeRefId: markRefId, myFavorite: true }] : [];
+		return result ? [{ memberId: memberId, markRefId: markRefId, myFavorite: true }] : [];
 	}
-	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
+	public async getFavoriteJobs(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		const { page, limit } = input;
-		const match: T = { likeGroup: MarkGroup.JOB, memberId: memberId };
-		const data: T = await this.likeModel
+		const match: T = { markGroup: MarkGroup.JOB, memberId: memberId };
+		const data: T = await this.markModel
 			.aggregate([
 				{ $match: match },
 				{ $sort: { updatedAt: -1 } },
@@ -54,17 +54,17 @@ export class LikeService {
 						from: 'jobs',
 						localField: 'markRefId',
 						foreignField: '_id',
-						as: 'favoriteProperty',
+						as: 'favoriteJob',
 					},
 				},
-				{ $unwind: '$favoriteProperty' },
+				{ $unwind: '$favoriteJob' },
 				{
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
 							{ $limit: limit },
 							lookupFavorite,
-							{ $unwind: '$favoriteProperty.memberData' },
+							{ $unwind: '$favoriteJob.memberData' },
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -72,7 +72,7 @@ export class LikeService {
 			])
 			.exec();
 		const result: Jobs = { list: [], metaCounter: data[0].metaCounter };
-		result.list = data[0].list.map((ele) => ele.favoriteProperty);
+		result.list = data[0].list.map((ele) => ele.favoriteJob);
 		console.log('result:', result);
 		return result;
 	}

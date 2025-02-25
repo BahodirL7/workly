@@ -8,7 +8,7 @@ import { FollowInquiry } from '../../libs/dto/follow/follow.input';
 import { T } from '../../libs/types/common';
 import {
 	lookupAuthMemberFollowed,
-	lookupAuthMemberLiked,
+	lookupAuthMemberMarked,
 	lookupFollowerData,
 	lookupFollowingData,
 } from '../../libs/config';
@@ -78,7 +78,7 @@ export class FollowService {
 						list: [
 							{ $skip: (page - 1) * limit },
 							{ $limit: limit },
-							lookupAuthMemberLiked(memberId, '$followingId'),
+							lookupAuthMemberMarked(memberId, '$followingId'),
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followingId' }),
 							lookupFollowingData,
 							{ $unwind: '$followingData' },
@@ -108,7 +108,7 @@ export class FollowService {
 						list: [
 							{ $skip: (page - 1) * limit },
 							{ $limit: limit },
-							lookupAuthMemberLiked(memberId, '$followerId'),
+							lookupAuthMemberMarked(memberId, '$followerId'),
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followerId' }),
 							lookupFollowerData,
 							{ $unwind: '$followerData' },

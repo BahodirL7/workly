@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MemberModule } from './member/member.module';
-import { PropertyModule } from './property/property.module';
+import { JobModule } from './job/job.module';
 import { AuthModule } from './auth/auth.module';
 import { CommentModule } from './comment/comment.module';
-import { LikeModule } from './like/like.module';
+import { MarkModule } from './mark/mark.module';
 import { ViewModule } from './view/view.module';
 import { FollowModule } from './follow/follow.module';
 import { BoardArticleModule } from './board-article/board-article.module';
@@ -12,9 +12,9 @@ import { BoardArticleModule } from './board-article/board-article.module';
 	imports: [
 		MemberModule,
 		AuthModule,
-		PropertyModule,
+		JobModule,
 		BoardArticleModule,
-		LikeModule,
+		MarkModule,
 		ViewModule,
 		CommentModule,
 		FollowModule,

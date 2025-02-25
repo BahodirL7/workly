@@ -8,14 +8,14 @@ export class MeMarked {
 	memberId: ObjectId;
 
 	@Field(() => String)
-	likeRefId: ObjectId;
+	markRefId: ObjectId;
 
 	@Field(() => Boolean)
 	myFavorite: boolean;
 }
 
 @ObjectType()
-export class Like {
+export class Mark {
 	@Field(() => String)
 	_id: ObjectId;
 

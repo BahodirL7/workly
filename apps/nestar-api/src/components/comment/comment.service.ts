@@ -3,7 +3,7 @@ import { Comment, Comments } from '../../libs/dto/comment/comment';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { MemberService } from '../member/member.service';
-import { PropertyService } from '../property/property.service';
+import { JobService } from '../job/job.service';
 import { BoardArticleService } from '../board-article/board-article.service';
 import { CommentInput, CommentsInquiry } from '../../libs/dto/comment/comment.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
@@ -17,7 +17,7 @@ export class CommentService {
 	constructor(
 		@InjectModel('Comment') private readonly commentModel: Model<Comment>,
 		private readonly memberService: MemberService,
-		private readonly propertyService: PropertyService,
+		private readonly jobService: JobService,
 		private readonly boardArticleService: BoardArticleService,
 	) {}
 
@@ -33,9 +33,9 @@ export class CommentService {
 
 		switch (input.commentGroup) {
 			case CommentGroup.JOB:
-				await this.propertyService.propertyStatsEditor({
+				await this.jobService.jobStatsEditor({
 					_id: input.commentRefId,
-					targetKey: 'propertyComments',
+					targetKey: 'jobComments',
 					modifier: 1,
 				});
 				break;
@@ -91,7 +91,7 @@ export class CommentService {
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							// meLiked
+							// meMarked
 							lookupMember,
 							{ $unwind: '$memberData' },
 						],

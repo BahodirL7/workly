@@ -11,25 +11,25 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import { ViewService } from '../view/view.service';
 import { JobUpdate } from '../../libs/dto/job/job.update';
 import * as moment from 'moment';
-import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { lookupAuthMemberMarked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { MarkInput } from '../../libs/dto/mark/job.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
-import { LikeService } from '../like/like.service';
+import { MarkService } from '../mark/mark.service';
 
 @Injectable()
-export class PropertyService {
+export class JobService {
 	constructor(
-		@InjectModel('Property') private readonly propertyModel: Model<Job>,
+		@InjectModel('Job') private readonly jobModel: Model<Job>,
 		private readonly memberService: MemberService,
 		private readonly viewService: ViewService,
-		private readonly likeService: LikeService,
+		private readonly markService: MarkService,
 	) {}
 
-	public async createProperty(input: JobInput): Promise<Job> {
+	public async createJob(input: JobInput): Promise<Job> {
 		try {
-			const result = await this.propertyModel.create(input);
-			//increase MemberProperties
-			await this.memberService.memberStatsEditor({ _id: result.memberId, targetKey: 'memberProperties', modifier: 1 });
+			const result = await this.jobModel.create(input);
+			//increase MemberJobs
+			await this.memberService.memberStatsEditor({ _id: result.memberId, targetKey: 'memberJobs', modifier: 1 });
 			console.log('result;', result);
 			return result;
 		} catch (err) {
@@ -38,53 +38,53 @@ export class PropertyService {
 		}
 	}
 
-	public async getProperty(memberId: ObjectId, propertyId: ObjectId): Promise<Job> {
-		const search: T = { _id: propertyId, propertyStatus: JobStatus.HIRING };
+	public async getJob(memberId: ObjectId, jobId: ObjectId): Promise<Job> {
+		const search: T = { _id: jobId, jobStatus: JobStatus.HIRING };
 
-		const targetProperty: Job = await this.propertyModel.findOne(search).exec();
-		if (!targetProperty) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		const targetJob: Job = await this.jobModel.findOne(search).exec();
+		if (!targetJob) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
-			const viewInput = { memberId: memberId, viewRefId: propertyId, viewGroup: ViewGroup.JOB };
+			const viewInput = { memberId: memberId, viewRefId: jobId, viewGroup: ViewGroup.JOB };
 			const newView = await this.viewService.recordView(viewInput);
 
 			if (newView) {
-				await this.propertyStatsEditor({ _id: propertyId, targetKey: 'jobViews', modifier: 1 });
-				targetProperty.jobViews++;
+				await this.jobStatsEditor({ _id: jobId, targetKey: 'jobViews', modifier: 1 });
+				targetJob.jobViews++;
 			}
 
-			//meLiked
-			const markInput = { memberId: memberId, markRefId: propertyId, markGroup: MarkGroup.JOB };
-			targetProperty.meMarked = await this.likeService.checkLikeExistence(markInput);
+			//meMarked
+			const markInput = { memberId: memberId, markRefId: jobId, markGroup: MarkGroup.JOB };
+			targetJob.meMarked = await this.markService.checkMarkExistence(markInput);
 		}
 
-		targetProperty.memberData = await this.memberService.getMember(null, targetProperty.memberId);
-		return targetProperty;
+		targetJob.memberData = await this.memberService.getMember(null, targetJob.memberId);
+		return targetJob;
 	}
 
-	public async propertyStatsEditor(input: StatisticModifier): Promise<Job> {
+	public async jobStatsEditor(input: StatisticModifier): Promise<Job> {
 		const { _id, targetKey, modifier } = input;
-		return await this.propertyModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
+		return await this.jobModel.findByIdAndUpdate(_id, { $inc: { [targetKey]: modifier } }, { new: true }).exec();
 	}
 
-	public async updateProperty(memberId: ObjectId, input: JobUpdate): Promise<Job> {
+	public async updateJob(memberId: ObjectId, input: JobUpdate): Promise<Job> {
 		let { jobStatus, closedAt, deletedAt } = input;
 		const search: T = {
 			_id: input._id,
 			memberId: memberId,
-			propertyStatus: JobStatus.HIRING,
+			jobStatus: JobStatus.HIRING,
 		};
 
 		if (jobStatus === JobStatus.CLOSED) closedAt = moment().toDate();
 		else if (jobStatus === JobStatus.DELETE) deletedAt = moment().toDate();
 
-		const result = await this.propertyModel.findOneAndUpdate(search, input, { new: true }).exec();
+		const result = await this.jobModel.findOneAndUpdate(search, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		if (closedAt || deletedAt) {
 			await this.memberService.memberStatsEditor({
 				_id: memberId,
-				targetKey: 'memberProperties',
+				targetKey: 'memberJobs',
 				modifier: -1,
 			});
 		}
@@ -92,15 +92,15 @@ export class PropertyService {
 		return result;
 	}
 
-	public async getProperties(memberId: ObjectId, input: JobsInquiry): Promise<Jobs> {
-		const match: T = { propertyStatus: JobStatus.HIRING };
+	public async getJobs(memberId: ObjectId, input: JobsInquiry): Promise<Jobs> {
+		const match: T = { jobStatus: JobStatus.HIRING };
 
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
 		this.shapeMatchQuery(match, input);
 		console.log('match:', match);
 
-		const result = await this.propertyModel
+		const result = await this.jobModel
 			.aggregate([
 				{ $match: match },
 				{ $sort: sort },
@@ -109,7 +109,7 @@ export class PropertyService {
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							lookupAuthMemberLiked(memberId),
+							lookupAuthMemberMarked(memberId),
 							lookupMember,
 							{ $unwind: '$memberData' },
 						],
@@ -145,13 +145,13 @@ export class PropertyService {
 		}
 	}
 
-	public async getAgentProperties(memberId: ObjectId, input: AgentJobsInquiry): Promise<Jobs> {
+	public async getAgentJobs(memberId: ObjectId, input: AgentJobsInquiry): Promise<Jobs> {
 		const { jobStatus } = input.search;
 		if (jobStatus === JobStatus.DELETE) throw new BadRequestException(Message.NOT_ALLOWED_REQUEST);
 		const match: T = { memberId: memberId, jobStatus: jobStatus ?? { $ne: JobStatus.DELETE } };
 		const sort: T = { [input?.sort ?? 'createdAt']: input?.direction ?? Direction.DESC };
 
-		const result = await this.propertyModel
+		const result = await this.jobModel
 			.aggregate([
 				{ $match: match },
 				{ $sort: sort },
@@ -175,21 +175,21 @@ export class PropertyService {
 	}
 
 	public async getFavorites(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
-		return await this.likeService.getFavoriteProperties(memberId, input);
+		return await this.markService.getFavoriteJobs(memberId, input);
 	}
 
 	public async getVisited(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
-		return await this.viewService.getVisitedProperties(memberId, input);
+		return await this.viewService.getVisitedJobs(memberId, input);
 	}
 
-	public async likeTargetProperty(memberId: ObjectId, markRefId: ObjectId): Promise<Job> {
-		const target: Job = await this.propertyModel.findOne({ _id: markRefId, jobStatus: JobStatus.HIRING }).exec();
+	public async markTargetJob(memberId: ObjectId, markRefId: ObjectId): Promise<Job> {
+		const target: Job = await this.jobModel.findOne({ _id: markRefId, jobStatus: JobStatus.HIRING }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		const input: MarkInput = { memberId: memberId, markRefId: markRefId, markGroup: MarkGroup.JOB };
 
-		// LIKE TOGGLE via Like modules
-		const modifier: number = await this.likeService.toggleLike(input);
-		const result = await this.propertyStatsEditor({ _id: markRefId, targetKey: 'jobMarks', modifier: modifier });
+		// MARK TOGGLE via Mark modules
+		const modifier: number = await this.markService.toggleMark(input);
+		const result = await this.jobStatsEditor({ _id: markRefId, targetKey: 'jobMarks', modifier: modifier });
 
 		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
 		return result;
@@ -197,7 +197,7 @@ export class PropertyService {
 
 	/** ADMIN **/
 
-	public async getAllPropertiesByAdmin(input: AllJobsInquiry): Promise<Jobs> {
+	public async getAllJobsByAdmin(input: AllJobsInquiry): Promise<Jobs> {
 		const { jobStatus, jobLocationList } = input.search;
 		const match: T = {};
 		const sort: T = { [input.sort ?? 'createdAt']: input.direction ?? Direction.DESC };
@@ -205,7 +205,7 @@ export class PropertyService {
 		if (jobStatus) match.jobStatus = jobStatus;
 		if (jobLocationList) match.jobLocation = { $in: jobLocationList };
 
-		const result = await this.propertyModel
+		const result = await this.jobModel
 			.aggregate([
 				{ $match: match },
 				{ $sort: sort },
@@ -227,7 +227,7 @@ export class PropertyService {
 		return result[0];
 	}
 
-	public async updatePropertyByAdmin(input: JobUpdate): Promise<Job> {
+	public async updateJobByAdmin(input: JobUpdate): Promise<Job> {
 		let { jobStatus, closedAt, deletedAt } = input;
 		const search: T = {
 			_id: input._id,
@@ -237,7 +237,7 @@ export class PropertyService {
 		if (jobStatus === JobStatus.CLOSED) closedAt = moment().toDate();
 		else if (jobStatus === JobStatus.DELETE) deletedAt = moment().toDate();
 
-		const result = await this.propertyModel.findOneAndUpdate(search, input, { new: true }).exec();
+		const result = await this.jobModel.findOneAndUpdate(search, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		if (closedAt || deletedAt) {
@@ -251,9 +251,9 @@ export class PropertyService {
 		return result;
 	}
 
-	public async removePropertyByAdmin(propertyId: ObjectId): Promise<Job> {
+	public async removeJobByAdmin(propertyId: ObjectId): Promise<Job> {
 		const search: T = { _id: propertyId, propertyStatus: JobStatus.DELETE };
-		const result = await this.propertyModel.findOneAndDelete(search).exec();
+		const result = await this.jobModel.findOneAndDelete(search).exec();
 		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
 
 		return result;

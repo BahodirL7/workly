@@ -14,10 +14,10 @@ import { ViewGroup } from '../../libs/enums/view.enum';
 import { StatisticModifier, T } from '../../libs/types/common';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
-import { lookupAuthMemberLiked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { lookupAuthMemberMarked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
 import { MarkInput } from '../../libs/dto/mark/job.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
-import { LikeService } from '../like/like.service';
+import { MarkService } from '../mark/mark.service';
 
 @Injectable()
 export class BoardArticleService {
@@ -25,7 +25,7 @@ export class BoardArticleService {
 		@InjectModel('BoardArticle') private readonly boardArticleModel: Model<BoardArticle>,
 		private readonly memberService: MemberService,
 		private readonly viewService: ViewService,
-		private readonly likeService: LikeService,
+		private readonly markService: MarkService,
 	) {}
 
 	public async createBoardArticle(memberId: ObjectId, input: BoardArticleInput): Promise<BoardArticle> {
@@ -60,7 +60,7 @@ export class BoardArticleService {
 
 			//meLiked
 			const markInput = { memberId: memberId, markRefId: articleId, markGroup: MarkGroup.ARTICLE };
-			targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(markInput);
+			targetBoardArticle.meLiked = await this.markService.checkMarkExistence(markInput);
 		}
 
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
@@ -117,7 +117,7 @@ export class BoardArticleService {
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							lookupAuthMemberLiked(memberId),
+							lookupAuthMemberMarked(memberId),
 							lookupMember,
 							{ $unwind: '$memberData' },
 						],
@@ -138,8 +138,8 @@ export class BoardArticleService {
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 		const input: MarkInput = { memberId: memberId, markRefId: markRefId, markGroup: MarkGroup.ARTICLE };
 
-		// LIKE TOGGLE via Like modules
-		const modifier: number = await this.likeService.toggleLike(input);
+		// MARK TOGGLE via Mark modules
+		const modifier: number = await this.markService.toggleMark(input);
 		const result = await this.boardArticleStatsEditor({
 			_id: markRefId,
 			targetKey: 'articleMarks',

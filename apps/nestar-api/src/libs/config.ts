@@ -19,12 +19,12 @@ export const getSerialForImage = (filename: string) => {
 	return uuidv4() + ext;
 };
 
-export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id') => {
+export const lookupAuthMemberMarked = (memberId: T, targetRefId: string = '$_id') => {
 	return {
 		$lookup: {
 			from: 'marks',
 			let: {
-				localLikeRefId: targetRefId,
+				localMarkRefId: targetRefId,
 				localMemberId: memberId,
 				localMyFavorite: true,
 			},
@@ -32,7 +32,7 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 				{
 					$match: {
 						$expr: {
-							$and: [{ $eq: ['$likeRefId', '$$localLikeRefId'] }, { $eq: ['$memberId', '$$localMemberId'] }],
+							$and: [{ $eq: ['$markRefId', '$$localMarkRefId'] }, { $eq: ['$memberId', '$$localMemberId'] }],
 						},
 					},
 				},
@@ -40,12 +40,12 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 					$project: {
 						_id: 0,
 						memberId: 1,
-						likeRefId: 1,
+						markRefId: 1,
 						myFavorite: '$$localMyFavorite',
 					},
 				},
 			],
-			as: 'meLiked',
+			as: 'meMarked',
 		},
 	};
 };
@@ -120,17 +120,17 @@ export const lookupFollowerData = {
 export const lookupFavorite = {
 	$lookup: {
 		from: 'members',
-		localField: 'favoriteProperty.memberId',
+		localField: 'favoriteJob.memberId',
 		foreignField: '_id',
-		as: 'favoriteProperty.memberData',
+		as: 'favoriteJob.memberData',
 	},
 };
 
 export const lookupVisit = {
 	$lookup: {
 		from: 'members',
-		localField: 'visitedProperty.memberId',
+		localField: 'visitedJob.memberId',
 		foreignField: '_id',
-		as: 'visitedProperty.memberData',
+		as: 'visitedJob.memberData',
 	},
 };

@@ -1,6 +1,15 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
-import { JobLocation, JobSorts, JobStatus, JobTags, JobType, KoreanLevel, WorkplaceTypes } from '../../enums/job.enum';
+import {
+	JobExperience,
+	JobLocation,
+	JobSorts,
+	JobStatus,
+	JobTags,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+} from '../../enums/job.enum';
 import { Member, TotalCounter } from '../member/member';
 import { MeMarked } from '../mark/job';
 
@@ -56,6 +65,9 @@ export class Job {
 
 	@Field(() => [JobTags])
 	jobTags: JobTags[];
+
+	@Field(() => JobExperience)
+	jobExperience: JobExperience;
 
 	@Field(() => String)
 	memberId: ObjectId;

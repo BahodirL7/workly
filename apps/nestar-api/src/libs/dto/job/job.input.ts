@@ -1,6 +1,15 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { JobLocation, JobSorts, JobStatus, JobTags, JobType, KoreanLevel, WorkplaceTypes } from '../../enums/job.enum';
+import {
+	JobExperience,
+	JobLocation,
+	JobSorts,
+	JobStatus,
+	JobTags,
+	JobType,
+	KoreanLevel,
+	WorkplaceTypes,
+} from '../../enums/job.enum';
 import { ObjectId } from 'mongoose';
 import { availableOptions, availableJobSorts } from '../../config';
 import { Direction } from '../../enums/common.enum';
@@ -58,6 +67,10 @@ export class JobInput {
 	@Field(() => [JobTags], { nullable: true })
 	jobTags?: JobTags[];
 	memberId?: ObjectId;
+
+	@IsNotEmpty()
+	@Field(() => JobExperience)
+	jobExperience: JobExperience;
 
 	@IsOptional()
 	@Field(() => Date, { nullable: true })

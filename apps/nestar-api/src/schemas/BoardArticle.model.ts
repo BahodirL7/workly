@@ -29,7 +29,7 @@ const BoardArticleSchema = new Schema(
 			type: String,
 		},
 
-		articleLikes: {
+		articleMarks: {
 			type: Number,
 			default: 0,
 		},

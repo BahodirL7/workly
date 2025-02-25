@@ -6,7 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { ViewModule } from '../view/view.module';
 import { MemberModule } from '../member/member.module';
 import CommentSchema from '../../schemas/Comment.model';
-import { PropertyModule } from '../property/property.module';
+import { JobModule } from '../job/job.module';
 import { BoardArticleModule } from '../board-article/board-article.module';
 
 @Module({
@@ -14,7 +14,7 @@ import { BoardArticleModule } from '../board-article/board-article.module';
 		MongooseModule.forFeature([{ name: 'Comment', schema: CommentSchema }]),
 		AuthModule,
 		MemberModule,
-		PropertyModule,
+		JobModule,
 		BoardArticleModule,
 	],
 	providers: [CommentResolver, CommentService],

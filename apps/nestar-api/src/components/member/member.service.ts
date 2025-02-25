@@ -13,9 +13,9 @@ import { ViewInput } from '../../libs/dto/view/view.input';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { MarkInput } from '../../libs/dto/mark/job.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
-import { LikeService } from '../like/like.service';
+import { MarkService } from '../mark/mark.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';
-import { lookupAuthMemberLiked } from '../../libs/config';
+import { lookupAuthMemberMarked } from '../../libs/config';
 
 @Injectable()
 export class MemberService {
@@ -24,7 +24,7 @@ export class MemberService {
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
 		private authService: AuthService,
 		private viewService: ViewService,
-		private likeService: LikeService,
+		private markService: MarkService,
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
@@ -98,9 +98,9 @@ export class MemberService {
 				targetMember.memberViews++;
 			}
 
-			// meLiked
+			// meMarked
 			const markInput = { memberId: memberId, markRefId: targetId, markGroup: MarkGroup.MEMBER };
-			targetMember.meMarked = await this.likeService.checkLikeExistence(markInput);
+			targetMember.meMarked = await this.markService.checkMarkExistence(markInput);
 
 			// meFollowed
 			targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
@@ -127,7 +127,7 @@ export class MemberService {
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							lookupAuthMemberLiked(memberId, '$_id'),
+							lookupAuthMemberMarked(memberId, '$_id'),
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -140,14 +140,14 @@ export class MemberService {
 		return result[0];
 	}
 
-	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
-		const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
+	public async markTargetMember(memberId: ObjectId, markRefId: ObjectId): Promise<Member> {
+		const target: Member = await this.memberModel.findOne({ _id: markRefId, memberStatus: MemberStatus.ACTIVE }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		const input: MarkInput = { memberId: memberId, markRefId: likeRefId, markGroup: MarkGroup.MEMBER };
+		const input: MarkInput = { memberId: memberId, markRefId: markRefId, markGroup: MarkGroup.MEMBER };
 
-		// LIKE TOGGLE via Like modules
-		const modifier: number = await this.likeService.toggleLike(input);
-		const result = await this.memberStatsEditor({ _id: likeRefId, targetKey: 'memberLikes', modifier: modifier });
+		// MARK TOGGLE via Mark modules
+		const modifier: number = await this.markService.toggleMark(input);
+		const result = await this.memberStatsEditor({ _id: markRefId, targetKey: 'memberMarks', modifier: modifier });
 
 		if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
 		return result;

@@ -29,7 +29,7 @@ export class ViewService {
 		return await this.viewModel.findOne(search).exec();
 	}
 
-	public async getVisitedProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
+	public async getVisitedJobs(memberId: ObjectId, input: OrdinaryInquiry): Promise<Jobs> {
 		const { page, limit } = input;
 		const match: T = { viewGroup: ViewGroup.JOB, memberId: memberId };
 		const data: T = await this.viewModel
@@ -38,20 +38,20 @@ export class ViewService {
 				{ $sort: { updatedAt: -1 } },
 				{
 					$lookup: {
-						from: 'properties',
+						from: 'jobs',
 						localField: 'viewRefId',
 						foreignField: '_id',
-						as: 'visitedProperty',
+						as: 'visitedJob',
 					},
 				},
-				{ $unwind: '$visitedProperty' },
+				{ $unwind: '$visitedJob' },
 				{
 					$facet: {
 						list: [
 							{ $skip: (page - 1) * limit },
 							{ $limit: limit },
 							lookupVisit,
-							{ $unwind: '$visitedProperty.memberData' },
+							{ $unwind: '$visitedJob.memberData' },
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -60,7 +60,7 @@ export class ViewService {
 			.exec();
 		console.log('data:', data);
 		const result: Jobs = { list: [], metaCounter: data[0].metaCounter };
-		result.list = data[0].list.map((ele) => ele.visitedProperty);
+		result.list = data[0].list.map((ele) => ele.visitedJob);
 		console.log('result:', result);
 		return result;
 	}

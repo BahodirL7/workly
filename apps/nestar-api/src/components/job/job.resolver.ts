@@ -1,5 +1,5 @@
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
-import { PropertyService } from './property.service';
+import { JobService } from './job.service';
 import { Jobs, Job } from '../../libs/dto/job/job';
 import { AgentJobsInquiry, AllJobsInquiry, OrdinaryInquiry, JobsInquiry, JobInput } from '../../libs/dto/job/job.input';
 import { MemberType } from '../../libs/enums/member.enum';
@@ -14,62 +14,59 @@ import { JobUpdate } from '../../libs/dto/job/job.update';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Resolver()
-export class PropertyResolver {
-	constructor(private readonly propertyService: PropertyService) {}
+export class JobResolver {
+	constructor(private readonly jobService: JobService) {}
 
 	@Roles(MemberType.COMPANY)
 	@UseGuards(RolesGuard)
 	@Mutation(() => Job)
-	public async createProperty(@Args('input') input: JobInput, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
+	public async createJob(@Args('input') input: JobInput, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
 		console.log('Mutation: createProperty');
 		input.memberId = memberId;
-		return await this.propertyService.createProperty(input);
+		return await this.jobService.createJob(input);
 	}
 
 	@UseGuards(WithoutGuard)
 	@Query((returns) => Job)
-	public async getProperty(@Args('propertyId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
-		console.log('Query: getProperty');
-		const propertyId = shapeIntoMongoObjectId(input);
-		return await this.propertyService.getProperty(memberId, propertyId);
+	public async getJob(@Args('jobId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
+		console.log('Query: getJob');
+		const jobId = shapeIntoMongoObjectId(input);
+		return await this.jobService.getJob(memberId, jobId);
 	}
 
 	@Roles(MemberType.COMPANY)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Job)
-	public async updateProperty(@Args('input') input: JobUpdate, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
-		console.log('Mutation: updateProperty');
+	public async updateJob(@Args('input') input: JobUpdate, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
+		console.log('Mutation: updateJob');
 		input._id = shapeIntoMongoObjectId(input._id);
-		return await this.propertyService.updateProperty(memberId, input);
+		return await this.jobService.updateJob(memberId, input);
 	}
 
 	@UseGuards(WithoutGuard)
 	@Query((returns) => Jobs)
-	public async getProperties(@Args('input') input: JobsInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Jobs> {
-		console.log('Query: getProperties');
-		return await this.propertyService.getProperties(memberId, input);
+	public async getJobs(@Args('input') input: JobsInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Jobs> {
+		console.log('Query: getJobs');
+		return await this.jobService.getJobs(memberId, input);
 	}
 
 	@Roles(MemberType.COMPANY)
 	@UseGuards(RolesGuard)
 	@Query((returns) => Jobs)
-	public async getAgentProperties(
+	public async getAgentJobs(
 		@Args('input') input: AgentJobsInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Jobs> {
-		console.log('Query: getAgentProperties');
-		return await this.propertyService.getAgentProperties(memberId, input);
+		console.log('Query: getAgentJobs');
+		return await this.jobService.getAgentJobs(memberId, input);
 	}
 
 	@UseGuards(AuthGuard)
 	@Mutation(() => Job)
-	public async likeTargetProperty(
-		@Args('propertyId') input: string,
-		@AuthMember('_id') memberId: ObjectId,
-	): Promise<Job> {
-		console.log('Mutation: likeTargetProperty');
-		const likeRefId = shapeIntoMongoObjectId(input);
-		return await this.propertyService.likeTargetProperty(memberId, likeRefId);
+	public async markTargetJob(@Args('jobId') input: string, @AuthMember('_id') memberId: ObjectId): Promise<Job> {
+		console.log('Mutation: markTargetJob');
+		const markRefId = shapeIntoMongoObjectId(input);
+		return await this.jobService.markTargetJob(memberId, markRefId);
 	}
 
 	@UseGuards(AuthGuard)
@@ -79,14 +76,14 @@ export class PropertyResolver {
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Jobs> {
 		console.log('Query: getFavorites');
-		return await this.propertyService.getFavorites(memberId, input);
+		return await this.jobService.getFavorites(memberId, input);
 	}
 
 	@UseGuards(AuthGuard)
 	@Query((returns) => Jobs)
 	public async getVisited(@Args('input') input: OrdinaryInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Jobs> {
 		console.log('Query: getVisited');
-		return await this.propertyService.getVisited(memberId, input);
+		return await this.jobService.getVisited(memberId, input);
 	}
 
 	/** ADMIN **/
@@ -94,29 +91,29 @@ export class PropertyResolver {
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Query((returns) => Jobs)
-	public async getAllPropertiesByAdmin(
+	public async getAllJobsByAdmin(
 		@Args('input') input: AllJobsInquiry,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Jobs> {
-		console.log('Query: getAllPropertiesByAdmin');
-		return await this.propertyService.getAllPropertiesByAdmin(input);
+		console.log('Query: getAllJobsByAdmin');
+		return await this.jobService.getAllJobsByAdmin(input);
 	}
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Job)
-	public async updatePropertyByAdmin(@Args('input') input: JobUpdate): Promise<Job> {
-		console.log('Mutation: updatePropertyByAdmin');
+	public async updateJobByAdmin(@Args('input') input: JobUpdate): Promise<Job> {
+		console.log('Mutation: updateJobByAdmin');
 		input._id = shapeIntoMongoObjectId(input._id);
-		return await this.propertyService.updatePropertyByAdmin(input);
+		return await this.jobService.updateJobByAdmin(input);
 	}
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation((returns) => Job)
-	public async removePropertyByAdmin(@Args('propertyId') input: string): Promise<Job> {
-		console.log('Mutation: removePropertyByAdmin');
+	public async removeJobByAdmin(@Args('jobId') input: string): Promise<Job> {
+		console.log('Mutation: removeJobByAdmin');
 		const jobId = shapeIntoMongoObjectId(input);
-		return await this.propertyService.removePropertyByAdmin(jobId);
+		return await this.jobService.removeJobByAdmin(jobId);
 	}
 }

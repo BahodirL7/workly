@@ -86,13 +86,13 @@ export class MemberResolver {
 
 	@UseGuards(AuthGuard)
 	@Mutation(() => Member)
-	public async likeTargetMember(
+	public async markTargetMember(
 		@Args('memberId') input: string,
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Member> {
-		console.log('Mutation: LikeTargetMember');
-		const likeRefId = shapeIntoMongoObjectId(input);
-		return await this.memberService.likeTargetMember(memberId, likeRefId);
+		console.log('Mutation: MarkTargetMember');
+		const markRefId = shapeIntoMongoObjectId(input);
+		return await this.memberService.markTargetMember(memberId, markRefId);
 	}
 
 	/** ADMIN **/

@@ -3,13 +3,13 @@ import { ViewGroup } from '../libs/enums/view.enum';
 
 const MarkSchema = new Schema(
 	{
-		likeGroup: {
+		markGroup: {
 			type: String,
 			enum: ViewGroup,
 			required: true,
 		},
 
-		likeRefId: {
+		markRefId: {
 			type: Schema.Types.ObjectId,
 			required: true,
 		},
@@ -20,9 +20,9 @@ const MarkSchema = new Schema(
 			ref: 'Member',
 		},
 	},
-	{ timestamps: true, collection: 'likes' },
+	{ timestamps: true, collection: 'marks' },
 );
 
-MarkSchema.index({ memberId: 1, likeRefId: 1 }, { unique: true });
+MarkSchema.index({ memberId: 1, markRefId: 1 }, { unique: true });
 
 export default MarkSchema;
