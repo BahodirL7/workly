@@ -60,7 +60,7 @@ export class BoardArticleService {
 
 			//meLiked
 			const markInput = { memberId: memberId, markRefId: articleId, markGroup: MarkGroup.ARTICLE };
-			targetBoardArticle.meLiked = await this.markService.checkMarkExistence(markInput);
+			targetBoardArticle.meMarked = await this.markService.checkMarkExistence(markInput);
 		}
 
 		targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);

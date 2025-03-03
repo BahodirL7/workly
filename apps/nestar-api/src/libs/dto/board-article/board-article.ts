@@ -48,7 +48,7 @@ export class BoardArticle {
 	memberData?: Member;
 
 	@Field(() => [MeMarked], { nullable: true })
-	meLiked?: MeMarked[];
+	meMarked?: MeMarked[];
 }
 
 @ObjectType()

@@ -31,7 +31,7 @@ const MemberSchema = new Schema(
 		memberLink: {
 			type: String,
 			index: { unique: true, sparse: true },
-			required: true,
+			default: '',
 		},
 
 		employeeCapacity: {
