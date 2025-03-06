@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { BoardArticleCategory, BoardArticleStatus } from '../../enums/board-article.enum';
 import { ObjectId } from 'mongoose';
 import { Member, TotalCounter } from '../member/member';
-import { MeMarked } from '../mark/job';
+import { MeMarked } from '../mark/mark';
 
 @ObjectType()
 export class BoardArticle {

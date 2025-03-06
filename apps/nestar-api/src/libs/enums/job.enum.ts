@@ -20,15 +20,15 @@ registerEnumType(JobStatus, {
 });
 
 export enum JobLocation {
-	SEOUL = 'SEOUL',
-	BUSAN = 'BUSAN',
-	INCHEON = 'INCHEON',
-	DAEGU = 'DAEGU',
-	GYEONGJU = 'GYEONGJU',
-	GWANGJU = 'GWANGJU',
-	CHONJU = 'CHONJU',
-	DAEJON = 'DAEJON',
-	JEJU = 'JEJU',
+	SEOUL = 'Seoul',
+	BUSAN = 'Busan',
+	INCHEON = 'Incheon',
+	DAEGU = 'Daegu',
+	GYEONGJU = 'Gyeongju',
+	GWANGJU = 'Gwangju',
+	CHONJU = 'Chonju',
+	DAEJON = 'Daejon',
+	JEJU = 'Jeju',
 }
 registerEnumType(JobLocation, {
 	name: 'JobLocation',

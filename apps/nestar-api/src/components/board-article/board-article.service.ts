@@ -15,7 +15,7 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupAuthMemberMarked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MarkInput } from '../../libs/dto/mark/job.input';
+import { MarkInput } from '../../libs/dto/mark/mark.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
 import { MarkService } from '../mark/mark.service';
 

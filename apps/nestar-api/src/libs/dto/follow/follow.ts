@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { Member, TotalCounter } from '../member/member';
-import { MeMarked } from '../mark/job';
+import { MeMarked } from '../mark/mark';
 
 @ObjectType()
 export class MeFollowed {

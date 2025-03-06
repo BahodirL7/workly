@@ -11,7 +11,7 @@ import { StatisticModifier, T } from '../../libs/types/common';
 import { ViewService } from '../view/view.service';
 import { ViewInput } from '../../libs/dto/view/view.input';
 import { ViewGroup } from '../../libs/enums/view.enum';
-import { MarkInput } from '../../libs/dto/mark/job.input';
+import { MarkInput } from '../../libs/dto/mark/mark.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
 import { MarkService } from '../mark/mark.service';
 import { Follower, Following, MeFollowed } from '../../libs/dto/follow/follow';

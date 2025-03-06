@@ -1,8 +1,8 @@
 import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { Mark, MeMarked } from '../../libs/dto/mark/job';
-import { MarkInput } from '../../libs/dto/mark/job.input';
+import { Mark, MeMarked } from '../../libs/dto/mark/mark';
+import { MarkInput } from '../../libs/dto/mark/mark.input';
 import { T } from '../../libs/types/common';
 import { Message } from '../../libs/enums/common.enum';
 import { OrdinaryInquiry } from '../../libs/dto/job/job.input';

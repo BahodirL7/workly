@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
-import { MeMarked } from '../mark/job';
+import { MeMarked } from '../mark/mark';
 import { MeFollowed } from '../follow/follow';
 import { JobStatus } from '../../enums/job.enum';
 

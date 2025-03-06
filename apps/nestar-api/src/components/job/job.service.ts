@@ -12,7 +12,7 @@ import { ViewService } from '../view/view.service';
 import { JobUpdate } from '../../libs/dto/job/job.update';
 import * as moment from 'moment';
 import { lookupAuthMemberMarked, lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
-import { MarkInput } from '../../libs/dto/mark/job.input';
+import { MarkInput } from '../../libs/dto/mark/mark.input';
 import { MarkGroup } from '../../libs/enums/mark.enum';
 import { MarkService } from '../mark/mark.service';
 
