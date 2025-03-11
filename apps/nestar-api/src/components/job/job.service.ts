@@ -31,6 +31,9 @@ export class JobService {
 			//increase MemberJobs
 			await this.memberService.memberStatsEditor({ _id: result.memberId, targetKey: 'memberJobs', modifier: 1 });
 			console.log('result;', result);
+
+			result.memberData = await this.memberService.getMember(null, result.memberId);
+
 			return result;
 		} catch (err) {
 			console.log('Error, Service.model:', err.message);

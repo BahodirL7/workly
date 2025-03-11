@@ -34,9 +34,9 @@ export class JobInput {
 	@Field(() => String)
 	jobTitle: string;
 
-	@IsNotEmpty()
-	@Field(() => Number)
-	jobSalary: number;
+	@IsOptional()
+	@Field(() => Number, { nullable: true })
+	jobSalary?: number;
 
 	@IsNotEmpty()
 	@Field(() => KoreanLevel)
@@ -44,7 +44,7 @@ export class JobInput {
 
 	@IsNotEmpty()
 	@Field(() => WorkplaceTypes)
-	workplaceTypes: WorkplaceTypes;
+	workplaceType: WorkplaceTypes;
 
 	@IsNotEmpty()
 	@Field(() => JobSorts)

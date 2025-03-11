@@ -33,14 +33,14 @@ export class Job {
 	@Field(() => String)
 	jobTitle: string;
 
-	@Field(() => Number)
-	jobSalary: number;
+	@Field(() => Int, { nullable: true })
+	jobSalary?: number;
 
 	@Field(() => KoreanLevel)
 	koreanLevel: KoreanLevel;
 
-	@Field(() => WorkplaceTypes)
-	workplaceTypes: WorkplaceTypes;
+	@Field(() => WorkplaceTypes, { nullable: true })
+	workplaceType: WorkplaceTypes;
 
 	@Field(() => JobSorts)
 	jobCategory: JobSorts;

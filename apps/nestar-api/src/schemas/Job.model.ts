@@ -41,7 +41,7 @@ const JobSchema = new Schema(
 		},
 
 		jobSalary: {
-			type: String,
+			type: Number || null,
 		},
 
 		koreanLevel: {

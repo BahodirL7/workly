@@ -116,6 +116,7 @@ export enum JobTags {
 	QA = 'QA',
 	REACT = 'React',
 	REACT_NATIVE = 'React Native',
+	TYPESCRIPT = 'Typescript',
 }
 registerEnumType(JobTags, {
 	name: 'JobTags',

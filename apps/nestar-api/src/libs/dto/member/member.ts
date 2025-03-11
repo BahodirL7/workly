@@ -22,7 +22,7 @@ export class Member {
 	@Field(() => MemberAuthType)
 	memberAuthType: MemberAuthType;
 
-	@Field(() => String)
+	@Field(() => String, { nullable: true })
 	memberLink: string;
 
 	@Field(() => String)
