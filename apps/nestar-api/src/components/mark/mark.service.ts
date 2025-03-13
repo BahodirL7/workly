@@ -38,7 +38,7 @@ export class MarkService {
 
 	public async checkMarkExistence(input: MarkInput): Promise<MeMarked[]> {
 		const { memberId, markRefId } = input;
-		const result = await this.markModel.findOne({ memberId: memberId, likeRefId: markRefId }).exec();
+		const result = await this.markModel.findOne({ memberId: memberId, markRefId: markRefId }).exec();
 
 		return result ? [{ memberId: memberId, markRefId: markRefId, myFavorite: true }] : [];
 	}

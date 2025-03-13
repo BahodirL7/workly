@@ -23,7 +23,7 @@ export class Member {
 	memberAuthType: MemberAuthType;
 
 	@Field(() => String, { nullable: true })
-	memberLink: string;
+	memberLink?: string;
 
 	@Field(() => String)
 	employeeCapacity: string;

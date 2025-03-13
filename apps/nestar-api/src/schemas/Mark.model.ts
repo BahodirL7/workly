@@ -1,11 +1,11 @@
 import { Schema } from 'mongoose';
-import { ViewGroup } from '../libs/enums/view.enum';
+import { MarkGroup } from '../libs/enums/mark.enum';
 
 const MarkSchema = new Schema(
 	{
 		markGroup: {
 			type: String,
-			enum: ViewGroup,
+			enum: MarkGroup,
 			required: true,
 		},
 
@@ -23,6 +23,6 @@ const MarkSchema = new Schema(
 	{ timestamps: true, collection: 'marks' },
 );
 
-MarkSchema.index({ memberId: 1, markRefId: 1 }, { unique: true });
+// MarkSchema.index({ memberId: 1, markRefId: 1 }, { unique: true });
 
 export default MarkSchema;
