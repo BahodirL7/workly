@@ -131,7 +131,7 @@ export class BoardArticleService {
 		return result[0];
 	}
 
-	public async likeTargetBoardArticle(memberId: ObjectId, markRefId: ObjectId): Promise<BoardArticle> {
+	public async markTargetBoardArticle(memberId: ObjectId, markRefId: ObjectId): Promise<BoardArticle> {
 		const target: BoardArticle = await this.boardArticleModel
 			.findOne({ _id: markRefId, articleStatus: BoardArticleStatus.ACTIVE })
 			.exec();

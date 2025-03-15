@@ -28,7 +28,7 @@ export class BoardArticle {
 	articleViews: number;
 
 	@Field(() => Int)
-	articleLikes: number;
+	articleMarks: number;
 
 	@Field(() => Int)
 	articleComments: number;

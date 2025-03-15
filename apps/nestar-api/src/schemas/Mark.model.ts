@@ -23,6 +23,6 @@ const MarkSchema = new Schema(
 	{ timestamps: true, collection: 'marks' },
 );
 
-// MarkSchema.index({ memberId: 1, markRefId: 1 }, { unique: true });
+MarkSchema.index({ memberId: 1, markRefId: 1 }, { unique: true, sparse: true });
 
 export default MarkSchema;
