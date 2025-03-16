@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardArticle, BoardArticles } from '../../libs/dto/board-article/board-article';
 import { MemberService } from '../member/member.service';
@@ -106,7 +106,10 @@ export class BoardArticleService {
 		if (input.search?.memberId) {
 			match.memberId = shapeIntoMongoObjectId(input.search.memberId);
 		}
-		console.log('match:', match);
+
+		if (input.page < 1 || input.limit < 1) {
+			throw new BadRequestException('Invalid pagination parameters');
+		}
 
 		const result = await this.boardArticleModel
 			.aggregate([
@@ -119,14 +122,17 @@ export class BoardArticleService {
 							{ $limit: input.limit },
 							lookupAuthMemberMarked(memberId),
 							lookupMember,
-							{ $unwind: '$memberData' },
+							{ $unwind: { path: '$memberData', preserveNullAndEmptyArrays: true } },
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
 				},
 			])
 			.exec();
-		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+		if (!result.length || !result[0].list.length) {
+			throw new NotFoundException(Message.NO_DATA_FOUND);
+		}
 
 		return result[0];
 	}
@@ -195,7 +201,7 @@ export class BoardArticleService {
 		if (articleStatus === BoardArticleStatus.DELETE) {
 			await this.memberService.memberStatsEditor({
 				_id: result.memberId,
-				targetKey: 'memberProperties',
+				targetKey: 'memberArticles',
 				modifier: -1,
 			});
 		}
