@@ -40,10 +40,10 @@ export class Job {
 	koreanLevel: KoreanLevel;
 
 	@Field(() => WorkplaceTypes, { nullable: true })
-	workplaceType: WorkplaceTypes;
+	workplaceType?: WorkplaceTypes;
 
-	@Field(() => JobSorts)
-	jobCategory: JobSorts;
+	@Field(() => JobSorts, { nullable: true })
+	jobSort?: JobSorts;
 
 	@Field(() => Int)
 	jobViews: number;
@@ -75,7 +75,7 @@ export class Job {
 	@Field(() => Date, { nullable: true })
 	closedAt?: Date;
 
-	@Field(() => Date)
+	@Field(() => Date, { nullable: true })
 	createdAt: Date;
 
 	@Field(() => Date, { nullable: true })
@@ -84,7 +84,7 @@ export class Job {
 	@Field(() => Date, { nullable: true })
 	postedAt?: Date;
 
-	@Field(() => Date)
+	@Field(() => Date, { nullable: true })
 	updatedAt: Date;
 
 	/** from aggregation **/

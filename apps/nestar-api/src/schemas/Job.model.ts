@@ -56,7 +56,7 @@ const JobSchema = new Schema(
 			required: true,
 		},
 
-		jobCategory: {
+		jobSort: {
 			type: String,
 			enum: JobSorts,
 			required: true,

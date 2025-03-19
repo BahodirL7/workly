@@ -2,7 +2,14 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Jobs, Job } from '../../libs/dto/job/job';
-import { AgentJobsInquiry, AllJobsInquiry, OrdinaryInquiry, JobsInquiry, JobInput } from '../../libs/dto/job/job.input';
+import {
+	AgentJobsInquiry,
+	AllJobsInquiry,
+	OrdinaryInquiry,
+	JobsInquiry,
+	JobInput,
+	JISearch,
+} from '../../libs/dto/job/job.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { MemberService } from '../member/member.service';
 import { StatisticModifier, T } from '../../libs/types/common';
@@ -31,8 +38,6 @@ export class JobService {
 			//increase MemberJobs
 			await this.memberService.memberStatsEditor({ _id: result.memberId, targetKey: 'memberJobs', modifier: 1 });
 			console.log('result;', result);
-
-			result.memberData = await this.memberService.getMember(null, result.memberId);
 
 			return result;
 		} catch (err) {
@@ -114,7 +119,7 @@ export class JobService {
 							{ $limit: input.limit },
 							lookupAuthMemberMarked(memberId),
 							lookupMember,
-							{ $unwind: '$memberData' },
+							{ $unwind: { path: '$memberData', preserveNullAndEmptyArrays: true } },
 						],
 						metaCounter: [{ $count: 'total' }],
 					},
@@ -128,24 +133,31 @@ export class JobService {
 	}
 
 	private shapeMatchQuery(match: T, input: JobsInquiry): void {
-		const { memberId, locationList, jobCategory, workplaceTypes, typeList, pricesRange, options, text } = input.search;
+		const {
+			memberId,
+			jobType,
+			locationList,
+			salaryRange,
+			koreanLevel,
+			workplaceType,
+			sortList,
+			jobVisa,
+			jobTags,
+			jobExperience,
+			text,
+		} = input.search as JISearch;
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
 		if (locationList && locationList.length) match.jobLocation = { $in: locationList };
-		if (jobCategory && jobCategory.length) match.jobCategory = { $in: jobCategory };
-		if (workplaceTypes && workplaceTypes.length) match.workplaceTypes = { $in: workplaceTypes };
-		if (typeList && typeList.length) match.jobType = { $in: typeList };
-
-		if (pricesRange) match.jobSalary = { $gte: pricesRange.start, $lte: pricesRange.end };
-		// if (periodsRange) match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
-		// if (squaresRange) match.propertySquare = { $gte: squaresRange.start, $lte: squaresRange.end };
-
-		if (text) match.propertyTitle = { $regex: new RegExp(text, 'i') };
-		if (options) {
-			match['$or'] = options.map((ele) => {
-				return { [ele]: true };
-			});
-		}
+		if (sortList && sortList.length) match.sortList = { $in: sortList };
+		if (workplaceType) match.workplaceType = { $in: workplaceType };
+		if (jobType && jobType.length) match.jobType = { $in: jobType };
+		if (salaryRange) match.jobSalary = { $gte: salaryRange.start, $lte: salaryRange.end };
+		if (koreanLevel) match.koreanLevel = { $in: koreanLevel };
+		if (jobVisa !== undefined) match.jobVisa = jobVisa;
+		if (jobTags && jobTags.length) match.jobTags = { $in: jobTags };
+		if (jobExperience) match.jobExperience = { $in: jobExperience };
+		if (text) match.jobTitle = { $regex: new RegExp(text, 'i') };
 	}
 
 	public async getAgentJobs(memberId: ObjectId, input: AgentJobsInquiry): Promise<Jobs> {

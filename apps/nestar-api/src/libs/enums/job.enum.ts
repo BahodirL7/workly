@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum JobType {
-	FULLTIME = 'Full-time',
-	PARTTIME = 'Part-time',
-	CONTRACT = 'Contract',
-	INTERNSHIP = 'Internship',
+	FULLTIME = 'FULLTIME',
+	PARTTIME = 'PARTTIME',
+	CONTRACT = 'CONTRACT',
+	INTERNSHIP = 'INTERNSHIP',
 }
 registerEnumType(JobType, {
 	name: 'JobType',
@@ -20,103 +20,103 @@ registerEnumType(JobStatus, {
 });
 
 export enum JobLocation {
-	SEOUL = 'Seoul',
-	BUSAN = 'Busan',
-	INCHEON = 'Incheon',
-	DAEGU = 'Daegu',
-	GYEONGJU = 'Gyeongju',
-	GWANGJU = 'Gwangju',
-	CHONJU = 'Chonju',
-	DAEJON = 'Daejon',
-	JEJU = 'Jeju',
+	SEOUL = 'SEOUL',
+	BUSAN = 'BUSAN',
+	INCHEON = 'INCHEON',
+	DAEGU = 'DAEGU',
+	GYEONGJU = 'GYEONGJU',
+	GWANGJU = 'GWANGJU',
+	CHONJU = 'CHONJU',
+	DAEJON = 'DAEJON',
+	JEJU = 'JEJU',
 }
 registerEnumType(JobLocation, {
 	name: 'JobLocation',
 });
 
 export enum KoreanLevel {
-	NOTREQUIRED = 'Not Required',
-	BASIC = 'Basic',
-	CONVERSATIONAL = 'Conversational',
-	BUSINESS = 'Business',
-	FLUENT = 'Fluent',
+	NOTREQUIRED = 'NOTREQUIRED',
+	BASIC = 'BASIC',
+	CONVERSATIONAL = 'CONVERSATIONAL',
+	BUSINESS = 'BUSINESS',
+	FLUENT = 'FLUENT',
 }
 registerEnumType(KoreanLevel, {
 	name: 'KoreanLevel',
 });
 
 export enum WorkplaceTypes {
-	ONSITE = 'On-site',
-	HYBRID = 'Hybrid',
-	REMOTE = 'Remote',
+	ONSITE = 'ONSITE',
+	HYBRID = 'HYBRID',
+	REMOTE = 'REMOTE',
 }
 registerEnumType(WorkplaceTypes, {
 	name: 'WorkplaceTypes',
 });
 
 export enum JobSorts {
-	ENGINEERING = 'Engineering',
-	DESIGN = 'Design',
-	PRODUCT = 'Product',
+	ENGINEERING = 'ENGINEERING',
+	DESIGN = 'DESIGN',
+	PRODUCT = 'PRODUCT',
 }
 registerEnumType(JobSorts, {
 	name: 'JobSorts',
 });
 
 export enum JobExperience {
-	ENTRY_LEVEL = 'New Grad or above',
-	JUNIOR = 'Junior (1-2 years)',
-	MID_LEVEL = 'Mid-level (2-5 years)',
-	SENIOR = 'Senior (5+ years)',
-	EXPERT = 'Expert (10+ years)',
+	ENTRY_LEVEL = 'ENTRY_LEVEL',
+	JUNIOR = 'JUNIOR',
+	MID_LEVEL = 'MID_LEVEL',
+	SENIOR = 'SENIOR',
+	EXPERT = 'EXPERT',
 }
 registerEnumType(JobExperience, {
 	name: 'JobExperience',
 });
 
 export enum JobTags {
-	ANALYTICS = 'Analytics',
-	ANDROID = 'Android',
-	ANGULAR = 'Angular',
-	BACKEND = 'Back-end',
-	BLOCKCHAIN = 'Blockchain',
+	ANALYTICS = 'ANALYTICS',
+	ANDROID = 'ANDROID',
+	ANGULAR = 'ANGULAR',
+	BACKEND = 'BACKEND',
+	BLOCKCHAIN = 'BLOCKCHAIN',
 	C = 'C',
 	C_SHARP = 'C#',
 	C_PLUS_PLUS = 'C++',
 	CSS = 'CSS',
-	CUSTOMER_SUPPORT = 'Customer Support',
-	DATA_ANALYSIS = 'Data Analysis',
-	DATA_ENGINEERING = 'Data Engineering',
-	DATA_MANAGEMENT = 'Data Management',
-	DEVOPS = 'DevOps',
-	ELIXIR = 'Elixir',
-	EMBEDDED_SYSTEM = 'Embedded System',
-	ENGINEERING_MANAGEMENT = 'Engineering Management',
-	FLUTTER = 'Flutter',
-	FRONTEND = 'Front-end',
-	FULL_STACK = 'Full Stack',
-	GAME_DEVELOPMENT = 'Game Development',
-	GO = 'Go',
-	GRAPHIC_DESIGN = 'Graphic Design',
+	CUSTOMER_SUPPORT = 'CUSTOMER_SUPPORT',
+	DATA_ANALYSIS = 'DATA_ANALYSIS',
+	DATA_ENGINEERING = 'DATA_ENGINEERING',
+	DATA_MANAGEMENT = 'DATA_MANAGEMENT',
+	DEVOPS = 'DEVOPS',
+	ELIXIR = 'ELIXIR',
+	EMBEDDED_SYSTEM = 'EMBEDDED_SYSTEM',
+	ENGINEERING_MANAGEMENT = 'ENGINEERING_MANAGEMENT',
+	FLUTTER = 'FLUTTER',
+	FRONTEND = 'FRONTEND',
+	FULL_STACK = 'FULL_STACK',
+	GAME_DEVELOPMENT = 'GAME_DEVELOPMENT',
+	GO = 'GO',
+	GRAPHIC_DESIGN = 'GRAPHIC_DESIGN',
 	HTML = 'HTML',
-	INFRASTRUCTURE = 'Infrastructure',
-	IOS = 'iOS',
-	IOT = 'IoT',
-	JAVA = 'Java',
-	JAVASCRIPT = 'Javascript',
-	KOTLIN = 'Kotlin',
-	MACHINE_LEARNING = 'Machine Learning',
-	MECHANICAL_ENGINEERING = 'Mechanical Engineering',
-	NETWORK = 'Network',
-	NO_SQL = 'No-SQL',
-	NODE_JS = 'Node.js',
+	INFRASTRUCTURE = 'INFRASTRUCTURE',
+	IOS = 'IOS',
+	IOT = 'IOT',
+	JAVA = 'JAVA',
+	JAVASCRIPT = 'JAVASCRIPT',
+	KOTLIN = 'KOTLIN',
+	MACHINE_LEARNING = 'MACHINE_LEARNING',
+	MECHANICAL_ENGINEERING = 'MECHANICAL_ENGINEERING',
+	NETWORK = 'NETWORK',
+	NO_SQL = 'NO_SQL',
+	NODE_JS = 'NODE_JS',
 	PHP = 'PHP',
-	PROJECT_MANAGEMENT = 'Project Management',
-	PYTHON = 'Python',
+	PROJECT_MANAGEMENT = 'PROJECT_MANAGEMENT',
+	PYTHON = 'PYTHON',
 	QA = 'QA',
-	REACT = 'React',
-	REACT_NATIVE = 'React Native',
-	TYPESCRIPT = 'Typescript',
+	REACT = 'REACT',
+	REACT_NATIVE = 'REACT_NATIVE',
+	TYPESCRIPT = 'TYPESCRIPT',
 }
 registerEnumType(JobTags, {
 	name: 'JobTags',

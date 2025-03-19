@@ -38,19 +38,19 @@ export class JobInput {
 	@Field(() => Number, { nullable: true })
 	jobSalary?: number;
 
-	@IsNotEmpty()
-	@Field(() => KoreanLevel)
-	koreanLevel: KoreanLevel;
+	@IsOptional()
+	@Field(() => KoreanLevel, { nullable: true })
+	koreanLevel?: KoreanLevel;
 
-	@IsNotEmpty()
-	@Field(() => WorkplaceTypes)
+	@IsOptional()
+	@Field(() => WorkplaceTypes, { nullable: true })
 	workplaceType: WorkplaceTypes;
 
-	@IsNotEmpty()
-	@Field(() => JobSorts)
-	jobCategory: JobSorts;
+	@IsOptional()
+	@Field(() => JobSorts, { nullable: true })
+	jobSort: JobSorts;
 
-	@IsNotEmpty()
+	@IsOptional()
 	@Field(() => [String])
 	jobImages: string[];
 
@@ -93,29 +93,40 @@ export class JISearch {
 	memberId?: ObjectId;
 
 	@IsOptional()
-	@Field(() => [JobLocation], { nullable: true })
+	@Field(() => [JobType], { nullable: 'itemsAndList' })
+	jobType?: JobType[];
+
+	@IsOptional()
+	@Field(() => [JobLocation], { nullable: 'itemsAndList' })
 	locationList?: JobLocation[];
 
 	@IsOptional()
-	@Field(() => [JobType], { nullable: true })
-	typeList?: JobType[];
-
-	@IsOptional()
-	@Field(() => JobSorts, { nullable: true })
-	jobCategory?: JobSorts;
-
-	@IsOptional()
-	@Field(() => WorkplaceTypes, { nullable: true })
-	workplaceTypes?: WorkplaceTypes;
-
-	@IsOptional()
-	@IsIn(availableOptions, { each: true })
-	@Field(() => [String], { nullable: true })
-	options?: string[];
-
-	@IsOptional()
 	@Field(() => SalaryRange, { nullable: true })
-	pricesRange?: SalaryRange;
+	salaryRange?: SalaryRange;
+
+	@IsOptional()
+	@Field(() => [KoreanLevel], { nullable: true })
+	koreanLevel?: KoreanLevel[];
+
+	@IsOptional()
+	@Field(() => [WorkplaceTypes], { nullable: true })
+	workplaceType?: WorkplaceTypes[];
+
+	@IsOptional()
+	@Field(() => [JobSorts], { nullable: true })
+	sortList?: JobSorts[];
+
+	@IsOptional()
+	@Field(() => Boolean, { nullable: true })
+	jobVisa?: boolean;
+
+	@IsOptional()
+	@Field(() => [JobTags], { nullable: 'itemsAndList' })
+	jobTags?: JobTags[];
+
+	@IsOptional()
+	@Field(() => [JobExperience], { nullable: true })
+	jobExperience?: JobExperience[];
 
 	@IsOptional()
 	@Field(() => String, { nullable: true })
@@ -149,7 +160,7 @@ export class JobsInquiry {
 }
 
 @InputType()
-export class APISearch {
+export class AJISearch {
 	@IsOptional()
 	@Field(() => JobStatus, { nullable: true })
 	jobStatus?: JobStatus;
@@ -177,8 +188,8 @@ export class AgentJobsInquiry {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() => APISearch)
-	search: APISearch;
+	@Field(() => AJISearch)
+	search: AJISearch;
 }
 
 @InputType()
