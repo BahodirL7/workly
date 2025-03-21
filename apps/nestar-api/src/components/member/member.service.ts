@@ -85,9 +85,11 @@ export class MemberService {
 				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
 			},
 		};
+		console.log('after Member:', search);
+
 		const targetMember = await this.memberModel.findOne(search).exec();
-		console.log('Found Member:', targetMember);
-		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+		console.log('before Member:', targetMember);
+		// if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
 			// record view

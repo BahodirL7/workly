@@ -66,6 +66,7 @@ export class JobInput {
 	@IsOptional()
 	@Field(() => [JobTags], { nullable: true })
 	jobTags?: JobTags[];
+
 	memberId?: ObjectId;
 
 	@IsNotEmpty()
