@@ -49,10 +49,11 @@ export class JobService {
 
 	public async getJob(memberId: ObjectId, jobId: ObjectId): Promise<Job> {
 		const search: T = { _id: jobId, jobStatus: JobStatus.HIRING };
-		console.log('search:', search);
-		console.log('Received jobId:', jobId);
+		console.log('Search Query:', JSON.stringify(search, null, 2));
 
 		const targetJob: Job = await this.jobModel.findOne(search).exec();
+		console.log('Database Response:', targetJob);
+
 		if (!targetJob) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
@@ -68,6 +69,7 @@ export class JobService {
 			const markInput = { memberId: memberId, markRefId: jobId, markGroup: MarkGroup.JOB };
 			targetJob.meMarked = await this.markService.checkMarkExistence(markInput);
 		}
+		console.log('targetJob.memberId:', targetJob?.memberId);
 
 		targetJob.memberData = await this.memberService.getMember(null, targetJob.memberId);
 		return targetJob;
