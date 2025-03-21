@@ -9,6 +9,7 @@ import {
 	JobsInquiry,
 	JobInput,
 	JISearch,
+	SalaryRange,
 } from '../../libs/dto/job/job.input';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { MemberService } from '../member/member.service';
@@ -48,6 +49,8 @@ export class JobService {
 
 	public async getJob(memberId: ObjectId, jobId: ObjectId): Promise<Job> {
 		const search: T = { _id: jobId, jobStatus: JobStatus.HIRING };
+		console.log('search:', search);
+		console.log('Received jobId:', jobId);
 
 		const targetJob: Job = await this.jobModel.findOne(search).exec();
 		if (!targetJob) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
@@ -149,14 +152,17 @@ export class JobService {
 
 		if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
 		if (locationList && locationList.length) match.jobLocation = { $in: locationList };
-		if (sortList && sortList.length) match.sortList = { $in: sortList };
+		if (sortList && sortList.length) match.jobSort = { $in: sortList };
 		if (workplaceType) match.workplaceType = { $in: workplaceType };
 		if (jobType && jobType.length) match.jobType = { $in: jobType };
 		if (salaryRange) match.jobSalary = { $gte: salaryRange.start, $lte: salaryRange.end };
 		if (koreanLevel) match.koreanLevel = { $in: koreanLevel };
 		if (jobVisa !== undefined) match.jobVisa = jobVisa;
 		if (jobTags && jobTags.length) match.jobTags = { $in: jobTags };
-		if (jobExperience) match.jobExperience = { $in: jobExperience };
+
+		if (Array.isArray(jobExperience) && jobExperience.length > 0) {
+			match.jobExperience = { $in: jobExperience };
+		}
 		if (text) match.jobTitle = { $regex: new RegExp(text, 'i') };
 	}
 

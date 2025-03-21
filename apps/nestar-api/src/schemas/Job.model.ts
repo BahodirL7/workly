@@ -41,7 +41,8 @@ const JobSchema = new Schema(
 		},
 
 		jobSalary: {
-			type: Number || null,
+			type: Number,
+			default: 0,
 		},
 
 		koreanLevel: {
@@ -99,7 +100,6 @@ const JobSchema = new Schema(
 		jobExperience: {
 			type: String,
 			enum: JobExperience,
-			required: true,
 		},
 
 		memberId: {

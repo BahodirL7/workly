@@ -154,7 +154,7 @@ export class JobsInquiry {
 	@Field(() => Direction, { nullable: true })
 	direction?: Direction;
 
-	@IsNotEmpty()
+	@IsOptional()
 	@Field(() => JISearch)
 	search: JISearch;
 }
