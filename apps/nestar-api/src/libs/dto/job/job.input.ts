@@ -94,11 +94,11 @@ export class JISearch {
 	memberId?: ObjectId;
 
 	@IsOptional()
-	@Field(() => [JobType], { nullable: 'itemsAndList' })
+	@Field(() => [JobType], { nullable: true })
 	jobType?: JobType[];
 
 	@IsOptional()
-	@Field(() => [JobLocation], { nullable: 'itemsAndList' })
+	@Field(() => [JobLocation], { nullable: true })
 	locationList?: JobLocation[];
 
 	@IsOptional()
@@ -122,7 +122,7 @@ export class JISearch {
 	jobVisa?: boolean;
 
 	@IsOptional()
-	@Field(() => [JobTags], { nullable: 'itemsAndList' })
+	@Field(() => [JobTags], { nullable: true })
 	jobTags?: JobTags[];
 
 	@IsOptional()
