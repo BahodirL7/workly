@@ -64,7 +64,7 @@ export class Following {
 	/** from aggregation **/
 
 	@Field(() => [MeMarked], { nullable: true })
-	meLiked?: MeMarked[];
+	meMarked?: MeMarked[];
 
 	@Field(() => [MeFollowed], { nullable: true })
 	meFollowed?: MeFollowed[];

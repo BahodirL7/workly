@@ -25,7 +25,7 @@ export class Job {
 	jobStatus: JobStatus;
 
 	@Field(() => JobLocation)
-	jobLocation: JobLocation;
+	jobLocation?: JobLocation;
 
 	@Field(() => String)
 	jobAddress: string;
