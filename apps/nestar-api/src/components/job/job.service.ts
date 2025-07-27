@@ -254,7 +254,7 @@ export class JobService {
 		let { jobStatus, closedAt, deletedAt } = input;
 		const search: T = {
 			_id: input._id,
-			propertyStatus: JobStatus.HIRING,
+			jobStatus: JobStatus.HIRING,
 		};
 
 		if (jobStatus === JobStatus.CLOSED) closedAt = moment().toDate();

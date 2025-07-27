@@ -50,7 +50,7 @@ export class JobUpdate {
 
 	@IsOptional()
 	@Field(() => WorkplaceTypes, { nullable: true })
-	workplaceTypes?: WorkplaceTypes;
+	workplaceType?: WorkplaceTypes;
 
 	@IsOptional()
 	@Field(() => JobSorts, { nullable: true })
