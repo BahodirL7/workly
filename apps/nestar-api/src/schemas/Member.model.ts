@@ -36,7 +36,7 @@ const MemberSchema = new Schema(
 		employeeCapacity: {
 			type: String,
 			enum: EmployeeCapacity,
-			default: EmployeeCapacity.DEFAULT,
+			default: EmployeeCapacity.SOLO,
 		},
 
 		memberPhone: {
